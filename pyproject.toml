@@ -1,20 +1,25 @@
-[build-system]
-requires = ["setuptools>=42", "wheel"]
-build-backend = "setuptools.build_meta"
-
-[project]
+[tool.poetry]
 name = "dynairxvis"
 version = "0.1.0"
-description = "A Python package for DynAIRx visualization."
-authors = [{ name = "Layik Hama", email = "l.hama@leeds.ac.uk" }]
-license = { file = "LICENSE" }
+description = "Python package for DynAIRx visualization"
+authors = ["Layik Hama <layik.hama@gmail.com>"]
+license = "MIT"
 readme = "README.md"
-keywords = ["visualization", "EHR"]
-classifiers = [
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
-]
-dependencies = [
-    # Your package dependencies, e.g., "numpy>=1.19.2",
-]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+matplotlib = "^3.8.4"
+numpy = "^1.26.4"
+pandas = "^2.2.1"
+tomli = "^2.0.1"
+
+[tool.poetry.group.dev.dependencies]
+Sphinx = "^7.2.6"
+pydata-sphinx-theme = "^0.15.2"
+myst-parser = "^2.0.0"
+pytest = "^8.1.1"
+notebook = "^7.1.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
