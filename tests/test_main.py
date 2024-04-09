@@ -1,6 +1,7 @@
-from dynairxvis.main import greet
+from dynairxvis import main, plot
 
 
 def test_main():
     w = "Welcome to DynAirXVis!"
-    assert greet() == w
+    assert main.greet() == w
+    assert 'plot' in dir(plot)
