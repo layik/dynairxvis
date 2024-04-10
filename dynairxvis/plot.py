@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from .radar import radar
 from .dot import dot
 from .box import box
+from .hist import histogram
 
 
 # =============================================================================
@@ -67,6 +68,7 @@ def plot(plot_name, *args, **kwargs):
         'radar': radar,
         'dot': dot,
         'box': box,
+        'hist': histogram
         # 'gantt': gantt,
     }
 
