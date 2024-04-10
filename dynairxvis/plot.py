@@ -2,6 +2,7 @@ import os
 import matplotlib.pyplot as plt
 from .radar import radar
 from .dot import dot
+from .box import box
 
 
 # =============================================================================
@@ -65,7 +66,7 @@ def plot(plot_name, *args, **kwargs):
     plot_functions = {
         'radar': radar,
         'dot': dot,
-        # 'bar': bar,
+        'box': box,
         # 'gantt': gantt,
     }
 
