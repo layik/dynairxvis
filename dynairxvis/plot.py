@@ -5,6 +5,8 @@ from .dot import dot
 from .box import box
 from .hist import histogram
 from .gantt import gantt
+from .scatter import scatter
+
 
 # =============================================================================
 # Internal
@@ -70,6 +72,7 @@ def plot(plot_name, *args, **kwargs):
         'box': box,
         'hist': histogram,
         'gantt': gantt,
+        'scatter': scatter
     }
 
     if plot_name in plot_functions:
