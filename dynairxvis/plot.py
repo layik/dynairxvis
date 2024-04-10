@@ -31,14 +31,13 @@ def _draw_fig(filename=None, overwrite=False, **kwargs):
             fig = plt.gcf()
             fig.savefig(filename, **kwargs)
         else:
-            print('** WARNING **: Figure not saved because a file with the' +
-                  'supplied name already exists.')
+            print('** WARNING **: Figure not saved. File exists.')
             print(filename)
     else:
         plt.show()
 
 
-def plot(plot_name, categories, values, filename=None, overwrite=False,
+def plot(categories, values, plot_name, filename=None, overwrite=False,
          **kwargs):
     """
     High-level plotting function that decides which plotting function to call
@@ -46,12 +45,12 @@ def plot(plot_name, categories, values, filename=None, overwrite=False,
 
     Parameters
     ----------
-    plot_name : str
-        The name of the plot type to generate. Supported: 'radar'.
     categories : list
         The categories to be used in the plot.
     values : list
         The values associated with each category.
+    plot_name : str
+        The name of the plot type to generate. Supported: 'radar'.
     filename : str, optional
         The filename for saving the plot. If None, the plot is shown on screen.
     overwrite : bool, optional

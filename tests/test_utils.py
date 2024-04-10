@@ -1,0 +1,2 @@
+CATEGORIES = ['N1', 'N2', 'N3']
+VALUES = [10, 15, 35]

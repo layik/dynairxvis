@@ -28,26 +28,27 @@ def radar(categories, values):
 
     radar(categories, values)
     """
+    # Copy the input lists to avoid modifying the originals
+    categories_copy = categories[:]
+    values_copy = values[:] + [values[0]]  # Correctly closes the loop for plotting.
+
     # Number of variables we're plotting.
-    num_vars = len(categories)
+    num_vars = len(categories_copy)
 
     # Compute angle each bar is centered on:
     angles = np.linspace(0, 2 * np.pi, num_vars, endpoint=False).tolist()
-
-    # The plot is circular, so we need to "complete the loop" and append the
-    # start value to the end.
-    values += values[:1]
+    # Complete the loop for angles as well
     angles += angles[:1]
 
     # Plot
     fig, ax = plt.subplots(figsize=(6, 4), subplot_kw=dict(polar=True))
-    ax.fill(angles, values, color='gray', alpha=0.25)
-    ax.plot(angles, values, color='gray', linewidth=2)
+    ax.fill(angles, values_copy, color='gray', alpha=0.25)
+    ax.plot(angles, values_copy, color='gray', linewidth=2)
     # Remove labels for the y-ticks
     ax.set_yticklabels([])
     # Set the category labels.
-    ax.set_xticks(angles[:-1])
-    ax.set_xticklabels(categories)
+    ax.set_xticks(angles[:-1])  # Use angles corresponding to categories
+    ax.set_xticklabels(categories_copy)
 
     # Title
     plt.title('Radar Chart', y=1.1)
