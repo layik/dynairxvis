@@ -4,7 +4,7 @@ from .radar import radar
 from .dot import dot
 from .box import box
 from .hist import histogram
-
+from .gantt import gantt
 
 # =============================================================================
 # Internal
@@ -68,8 +68,8 @@ def plot(plot_name, *args, **kwargs):
         'radar': radar,
         'dot': dot,
         'box': box,
-        'hist': histogram
-        # 'gantt': gantt,
+        'hist': histogram,
+        'gantt': gantt,
     }
 
     if plot_name in plot_functions:
