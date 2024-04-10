@@ -1,8 +1,9 @@
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
+import itertools
 
 
-def scatter(categories, start_dates, end_dates, markers, fig_kw={},
+def scatter(categories, start_dates, end_dates, markers=None, fig_kw={},
             plot_kw={}, **kwargs):
     """
     Creates and displays a grouped scatter plot with custom markers
@@ -16,8 +17,10 @@ def scatter(categories, start_dates, end_dates, markers, fig_kw={},
         The start dates for each task.
     end_dates : list of datetime
         The end dates for each task.
-    markers : dict
-        A dictionary mapping categories to marker styles.
+ markers : dict, optional
+        A dictionary mapping categories to custom marker styles.
+        If not provided, default markers will be cycled through
+        for each category.
     fig_kw : dict
         Keyword arguments for plt.subplots() to customize the figure.
     plot_kw : dict
@@ -39,32 +42,36 @@ def scatter(categories, start_dates, end_dates, markers, fig_kw={},
 
     scatter(categories, start_dates, end_dates, markers)
     """
+    # Default figure and plot settings
     default_fig_kw = {'figsize': (6, 4)}
     default_fig_kw.update(fig_kw)
     fig, ax = plt.subplots(**default_fig_kw)
 
-    # Calculate category_positions based on unique_categories
+    default_markers = ['o', '^', 's', '*', '+', 'x', 'D', 'h']
+    marker_cycle = itertools.cycle(default_markers)
+
+    if markers is None:
+        markers = {}
+
     unique_categories = sorted(set(categories), key=categories.index)
-    category_positions = {category: pos for pos,
-                          category in enumerate(unique_categories, start=1)}
+    category_positions = {category: pos for pos, category in enumerate(unique_categories, start=1)}
 
-    for start_date, end_date, category in zip(start_dates,
-                                              end_dates, categories):
+    for start_date, end_date, category in zip(start_dates, end_dates, categories):
         y_position = category_positions[category]
-        # Use custom marker or default to 'o'
-        marker = markers.get(category, 'o')
+        marker = markers.get(category, next(marker_cycle))
         ax.scatter([start_date, end_date], [y_position, y_position],
-                   marker=marker, **plot_kw)
+                   marker=marker, **plot_kw, label=category if kwargs.get('legend', True) else "")
 
-    # Adjust y-axis to show category labels
     plt.yticks(list(category_positions.values()), unique_categories)
-
     ax.xaxis_date()
-    myFmt = mdates.DateFormatter('%Y')
-    ax.xaxis.set_major_formatter(myFmt)
-
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y'))
     ax.grid(True, which='both', linestyle='--', linewidth=0.5)
     plt.xlabel(kwargs.get('xlabel', 'Time'))
     plt.title(kwargs.get('title', 'Grouped Scatter Chart with Custom Markers'))
+
+    # Conditionally display the legend based on 'legend' in kwargs
+    if kwargs.get('legend', True):
+        ax.legend(title="Categories", loc="best")
+
     plt.tight_layout()
     plt.show()
