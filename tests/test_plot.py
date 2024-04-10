@@ -13,13 +13,13 @@ def test_plot_saves_file(mock_show):
     # Test if the plot has been saved to a file
     # This requires modifying the radar function to save the plot
     filename = "test_plot.png"
-    plot(CATEGORIES, VALUES,
-         plot_name='radar',  filename=filename)
+    plot('radar', CATEGORIES, VALUES, filename=filename)
     assert os.path.isfile(filename), "Plot file was not created"
     os.remove(filename)  # Clean up the file after test
 
 
 @patch("builtins.print")
 def test_invalid_plot_name(mock_print):
-    plot(CATEGORIES, VALUES, plot_name='foo')
-    mock_print.assert_called_with("**WARNING: ** no plot_name provided")
+    plot('foo', CATEGORIES, VALUES)
+    mock_print.assert_called_with("**WARNING: ** 'foo' is not" +
+                                  " a supported plot type.")

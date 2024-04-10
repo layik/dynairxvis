@@ -1,6 +1,7 @@
 import os
 import matplotlib.pyplot as plt
 from .radar import radar
+from .dot import dot
 
 
 # =============================================================================
@@ -37,37 +38,44 @@ def _draw_fig(filename=None, overwrite=False, **kwargs):
         plt.show()
 
 
-def plot(categories, values, plot_name, filename=None, overwrite=False,
-         **kwargs):
+def plot(plot_name, *args, **kwargs):
     """
-    High-level plotting function that decides which plotting function to call
-    based on plot_name. Currently supports a 'radar' plot.
+    High-level plotting function that dispatches to specific plotting functions
+    based on plot_name. It then shows the plot or saves it to a file.
 
     Parameters
     ----------
-    categories : list
-        The categories to be used in the plot.
-    values : list
-        The values associated with each category.
     plot_name : str
-        The name of the plot type to generate. Supported: 'radar'.
-    filename : str, optional
-        The filename for saving the plot. If None, the plot is shown on screen.
-    overwrite : bool, optional
-        If False, does not overwrite the file if it exists. If True,
-        overwrites the file.
+        The name of the plot type to generate.
+    *args : tuple
+        Positional arguments passed directly to the plotting function.
     **kwargs : dict
-        Additional keyword arguments passed to the plot's savefig method.
+        Keyword arguments passed directly to the plotting function. It should
+        include 'filename' and 'overwrite' if saving the plot is desired.
 
     Returns
     -------
     None.
     """
-    # Switch based on plot_name
-    if plot_name == 'radar':
-        radar(categories, values)
+    # Extract filename and overwrite from kwargs, defaulting to None and False if not present
+    filename = kwargs.pop('filename', None)
+    overwrite = kwargs.pop('overwrite', False)
+
+    # Mapping of plot_name to plotting function
+    plot_functions = {
+        'radar': radar,
+        'dot': dot,
+        # 'bar': bar,
+        # 'gantt': gantt,
+    }
+
+    if plot_name in plot_functions:
+        # Create the plot
+        plot_func = plot_functions[plot_name]
+        # Ensure plot functions return fig, ax
+        plot_func(*args, **kwargs)
     else:
-        print('**WARNING: ** no plot_name provided')
+        print(f"**WARNING: ** '{plot_name}' is not a supported plot type.")
 
     # Show the plot or save it to a file
     _draw_fig(filename=filename, overwrite=overwrite, **kwargs)
