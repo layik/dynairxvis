@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+from .utils import FIG_SIZE
 
 
 def histogram(values, bins=None, orientation='vertical',
@@ -29,7 +30,7 @@ def histogram(values, bins=None, orientation='vertical',
               xlabel='Frequency', ylabel='Value')
     """
     # Setup default figure size
-    default_fig_kw = {'figsize': (6, 4)}
+    default_fig_kw = FIG_SIZE
     # Update with any user-provided figure kwargs,
     # preserving the defaults unless overridden
     default_fig_kw.update(fig_kw)

@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from .utils import FIG_SIZE
 
 
 def dot(values, fig_kw={}, ax_kw={}, plot_kw={}, **kwargs):
@@ -9,8 +10,8 @@ def dot(values, fig_kw={}, ax_kw={}, plot_kw={}, **kwargs):
     Parameters
     ----------
     values : list of float
-        The values to be plotted. Each unique value's occurrence count determines
-        the number of dots plotted for that value.
+        The values to be plotted. Each unique value's occurrence count
+        determines the number of dots plotted for that value.
     fig_kw : dict
         Keyword arguments for plt.subplots() to customize the figure.
         Default is an empty dict. Example: {'figsize': (6, 4)}
@@ -18,10 +19,11 @@ def dot(values, fig_kw={}, ax_kw={}, plot_kw={}, **kwargs):
         Keyword arguments for ax.set() to customize the Axes.
         Default is an empty dict. Example: {'ylim': (-1, max_count)}
     plot_kw : dict
-        Additional keyword arguments to pass to ax.plot() for further customization.
+        Additional keyword arguments to pass to ax.plot() for further
+        customization.
     kwargs : dict
-        Additional keyword arguments for other matplotlib customizations that might
-        not fit into the above categories.
+        Additional keyword arguments for other matplotlib customizations
+        that might not fit into the above categories.
 
     Example
     -------
@@ -33,7 +35,7 @@ def dot(values, fig_kw={}, ax_kw={}, plot_kw={}, **kwargs):
     vs, counts = np.unique(values, return_counts=True)
 
     # Default figure and axes setup
-    fig_defaults = {'figsize': (6, 4)}
+    fig_defaults = FIG_SIZE
     fig_defaults.update(fig_kw)  # Update with any user-provided figure kwargs
 
     # Create figure and axes

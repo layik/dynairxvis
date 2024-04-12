@@ -8,6 +8,7 @@ from .gantt import gantt
 from .scatter import scatter
 from .heatmap import heatmap
 
+
 # =============================================================================
 # Internal
 # =============================================================================

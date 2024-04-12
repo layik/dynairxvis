@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
+from .utils import FIG_SIZE
 
 
 def gantt(categories, start_dates, end_dates, fig_kw={}, plot_kw={}, **kwargs):
@@ -33,7 +34,7 @@ def gantt(categories, start_dates, end_dates, fig_kw={}, plot_kw={}, **kwargs):
           datetime(2020, 9, 1)])
     """
     # Set up default figure settings
-    default_fig_kw = {'figsize': (6, 4)}
+    default_fig_kw = FIG_SIZE
     default_fig_kw.update(fig_kw)
     fig, ax = plt.subplots(**default_fig_kw)
 

@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from .utils import FIG_SIZE
 
 
 def radar(categories, values, fig_kw={}, ax_kw={}, **kwargs):
@@ -18,7 +19,7 @@ def radar(categories, values, fig_kw={}, ax_kw={}, **kwargs):
         its corresponding category.
     fig_kw : dict
         Keyword arguments for plt.subplots() to customize the figure.
-        Default is an empty dict. Example: {'figsize': (6, 4)}
+        Default is an empty dict. Example: :data:`~plot.FIG_SIZE`
     ax_kw : dict
         Keyword arguments for ax.set() to customize the Axes.
         Default is an empty dict. Example: {'title': 'Radar Chart'}
@@ -46,7 +47,7 @@ def radar(categories, values, fig_kw={}, ax_kw={}, **kwargs):
     angles += angles[:1]  # Complete the loop for angles as well
 
     # Default figure and axes setup
-    fig_defaults = {'figsize': (6, 4)}
+    fig_defaults = FIG_SIZE
     fig_defaults.update(fig_kw)  # Update with any user-provided figure kwargs
 
     # Plot
