@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
+import numpy as np
 import itertools
 
 
@@ -55,73 +56,69 @@ def grouped_chart(categories, start_dates, end_dates, chart_type='line',
     default_markers = ['o', '^', 's', '*', '+', 'x', 'D', 'h']
 
     # Assign unique y-positions based on categories
-    unique_categories = sorted(set(categories), key=categories.index)
+    unique_cats = sorted(set(categories), key=categories.index)
     category_positions = {category: pos for pos,
-                          category in enumerate(unique_categories, start=1)}
+                          category in enumerate(unique_cats, start=1)}
 
-    # Container for legend handles
-    legend_handles = {}
+    # Create a color palette with as many gray shades as
+    # there are unique categories
+    # Here, '0.1' avoids pure black and '0.9' avoids pure white.
+    gray_color_palette = plt.cm.Greys(np.linspace(0.2, 0.8, len(unique_cats)))
 
-    # Internal function to plot a line
-    def _plot_line(ax, category, start_date, end_date,
-                   position, plot_kw, category_markers):
-        line_style = plot_kw.get('style', '-')
-        # Use the category to get the specific marker, if any
-        marker = category_markers.get(category, 'o')
-        line_handle, = ax.plot([start_date, end_date], [position, position],
-                               color=plot_kw.get('color', 'black'),
-                               linestyle=line_style,
-                               linewidth=plot_kw.get('linewidth', 2),
-                               marker=marker, label=category)
-        return line_handle
+    # Check if the user has provided a custom color mapping,
+    # otherwise use the default gray shades
+    if 'category_colors' not in kwargs or not kwargs['category_colors']:
+        category_colors = {category: color for category,
+                           color in zip(unique_cats, gray_color_palette)}
+    else:
+        category_colors = kwargs['category_colors']
 
-    # The internal plotting functions
-    def _plot_scatter(ax, category, start_date, end_date,
-                      position, category_markers, plot_kw):
-        # Use the category to get the specific marker, if any
-        scatter_style = category_markers.get(category, 'o')
-        scatter_handle = ax.scatter([start_date, end_date],
-                                    [position, position],
-                                    **plot_kw, marker=scatter_style,
-                                    label=category)
-        return scatter_handle
+    # If markers are not provided, create a cycling
+    # iterator of default markers.
+    if markers is None:
+        marker_iter = itertools.cycle(default_markers)
+        category_markers = {category:
+                            next(marker_iter) for category in unique_cats}
+    else:
+        # Use the provided markers dictionary directly.
+        category_markers = markers
 
-    # Prepare markers for each category if not provided
-    category_markers = markers if markers is not None else {
-        category: marker for category,
-        marker in zip(sorted(set(categories)),
-                      itertools.cycle(default_markers))}
+    # Plotting functions with consistent color and marker
+    def _plot_scatter(ax, category, start_date, end_date, position, plot_kw):
+        ax.scatter([start_date, end_date], [position, position],
+                   color=category_colors[category],
+                   marker=category_markers[category], **plot_kw,
+                   label=category if category not in plotted_cats else "")
+        plotted_cats.add(category)
 
-    # Container for legend handles
-    legend_handles = {}
+    def _plot_line(ax, category, start_date, end_date, position, plot_kw):
+        ax.plot([start_date, end_date], [position, position],
+                color=category_colors[category],
+                marker=category_markers[category], **plot_kw,
+                label=category if category not in plotted_cats else "")
+        plotted_cats.add(category)
 
-    # Plot based on chart type
+    # To keep track of which categories have been plotted
+    plotted_cats = set()
+    # Plot based on the specified chart type
     for start_date, end_date, category in zip(start_dates, end_dates,
                                               categories):
         position = category_positions[category]
-        if chart_type == 'line':
-            handle = _plot_line(ax, category, start_date, end_date, position,
-                                plot_kw, category_markers)
-        elif chart_type == 'scatter':
-            handle = _plot_scatter(ax, category, start_date, end_date,
-                                   position, category_markers, plot_kw)
+        if chart_type == 'scatter':
+            _plot_scatter(ax, category, start_date, end_date,
+                          position, plot_kw)
+        elif chart_type == 'line':
+            _plot_line(ax, category, start_date, end_date,
+                       position, plot_kw)
 
-        # Add to legend handles if not already present
-        if handle and category not in legend_handles:
-            legend_handles[category] = handle
-
-    # Set axis labels, title, and x-axis date format
-    plt.yticks(range(1, len(unique_categories) + 1), unique_categories)
+    # Set axis, legend, and show plot
+    plt.yticks(range(1, len(unique_cats) + 1), unique_cats)
     ax.xaxis_date()
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y'))
-    plt.xlabel(kwargs.get('xlabel', 'Time'))
+    plt.xlabel(kwargs.get('xlabel', 'Date'))
     plt.title(kwargs.get('title', f'{chart_type.capitalize()} Chart'))
-
-    # Add legend if required
-    if kwargs.get('legend', True) and legend_handles:
-        ax.legend(handles=[legend_handles[cat] for cat in unique_categories],
-                  title="Categories", loc="best")
-
+    if kwargs.get('legend', True):
+        ax.legend(title="Categories", loc="best")
     plt.tight_layout()
     plt.show()
 
