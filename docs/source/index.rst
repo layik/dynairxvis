@@ -10,7 +10,9 @@ Welcome to dynairxvis's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   radar
+   plot
+   gantt
+   scatter
 
 Indices and tables
 ==================
