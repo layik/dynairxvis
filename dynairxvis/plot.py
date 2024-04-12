@@ -6,7 +6,7 @@ from .box import box
 from .hist import histogram
 from .gantt import gantt
 from .scatter import scatter
-
+from .heatmap import heatmap
 
 # =============================================================================
 # Internal
@@ -72,7 +72,8 @@ def plot(plot_name, *args, **kwargs):
         'box': box,
         'hist': histogram,
         'gantt': gantt,
-        'scatter': scatter
+        'scatter': scatter,
+        'heatmap': heatmap
     }
 
     if plot_name in plot_functions:
