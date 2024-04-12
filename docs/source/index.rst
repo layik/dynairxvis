@@ -11,8 +11,6 @@ Welcome to dynairxvis's documentation!
    :caption: Contents:
 
    plot
-   gantt
-   scatter
 
 Indices and tables
 ==================
