@@ -12,6 +12,9 @@ Welcome to dynairxvis's documentation!
 
    plot
 
+.. include:: ../../README.md
+   :parser: myst_parser.sphinx_
+
 Indices and tables
 ==================
 
