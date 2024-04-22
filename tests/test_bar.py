@@ -5,7 +5,7 @@ from .test_utils import CATEGORIES, VALUES
 
 
 @patch('matplotlib.pyplot.show')
-def test_bar():
+def test_bar(mock_show):
     # Call the function without trying to unpack fig and ax
     bar(CATEGORIES, VALUES)
 
