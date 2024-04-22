@@ -39,6 +39,7 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         pip install jupyterlab
+        pip install -e .
         cd notebooks
         jupyter nbconvert --execute --to notebook get_started.ipynb
 
