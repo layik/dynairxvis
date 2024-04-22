@@ -19,6 +19,8 @@ pydata-sphinx-theme = "^0.15.2"
 myst-parser = "^2.0.0"
 pytest = "^8.1.1"
 notebook = "^7.1.2"
+jupyter = "^1.0.0"
+nbconvert = "^7.16.3"
 
 [build-system]
 requires = ["poetry-core"]
