@@ -41,7 +41,7 @@ jobs:
     - name: Run notebooks [Ubuntu only]
       if: runner.os == 'Linux'
       run: |
-        poetry run pytest --nbval tests/notebooks/
+        poetry run pytest --nbval notebooks/
 
     - name: Build and test documentation [Ubuntu only]
       if: runner.os == 'Linux'
