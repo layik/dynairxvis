@@ -26,24 +26,25 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: Install dependencies
+    - name: Install Poetry
       run: |
         python -m pip install --upgrade pip
         pip install poetry
-        poetry install -E all -E doc
+
+    - name: Install dependencies
+      run: |
+        poetry install --extras all --extras doc
 
     - name: Run tests
-      run: |
-        poetry run pytest
+      run: poetry run pytest
 
-    - name: Run notebooks [Linux]
-      if: runner.os == 'Linux' && matrix.python-version == '3.9'
-      run: |
-        pip install -e '.[all]'
-        cd tests && bash check_notebooks.sh
-
-    - name: Build docs [Linux]
+    - name: Run notebooks [Ubuntu only]
       if: runner.os == 'Linux'
       run: |
-        pip install myst-parser
-        poetry run sphinx-build docs docs/build -b html
+        poetry run pytest --nbval tests/notebooks/
+
+    - name: Build and test documentation [Ubuntu only]
+      if: runner.os == 'Linux'
+      run: |
+        cd docs
+        poetry run make html
