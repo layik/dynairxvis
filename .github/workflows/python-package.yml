@@ -40,11 +40,11 @@ jobs:
       run: |
         pip install jupyterlab
         pip install -e .
+        cd notebooks
         jupyter nbconvert --execute --to notebook get_started.ipynb
-      working-directory: notebooks
 
     - name: Build docs [Ubuntu only]
       if: runner.os == 'Linux'
       run: |
+        cd docs
         poetry run make html
-      working-directory: docs
