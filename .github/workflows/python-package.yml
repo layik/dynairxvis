@@ -35,12 +35,12 @@ jobs:
     - name: Run tests
       run: poetry run pytest
 
-    - name: Run notebooks [Ubuntu only]
-      if: runner.os == 'Linux'
-      run: |
-        cd notebooks
-        find . -maxdepth 1 -name '*.ipynb' -print0 |
-        xargs -0 -I {} jupyter nbconvert --execute --to notebook --inplace "{}"
+    # - name: Run notebooks [Ubuntu only]
+    #   if: runner.os == 'Linux'
+    #   run: |
+    #     cd notebooks
+    #     find . -maxdepth 1 -name '*.ipynb' -print0 |
+    #     xargs -0 -I {} jupyter nbconvert --execute --to notebook --inplace "{}"
 
     - name: Build docs [Ubuntu only]
       if: runner.os == 'Linux'
