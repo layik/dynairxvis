@@ -45,4 +45,4 @@ jobs:
 
     - name: Build docs [Ubuntu only]
       if: runner.os == 'Linux'
-      run: cd ../docs && make html
+      run: cd docs && make html
