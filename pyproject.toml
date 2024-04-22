@@ -13,14 +13,11 @@ numpy = "^1.26.4"
 pandas = "^2.2.1"
 tomli = "^2.0.1"
 
-[tool.poetry.group.dev.dependencies]
-Sphinx = "^7.2.6"
-pydata-sphinx-theme = "^0.15.2"
-myst-parser = "^2.0.0"
-pytest = "^8.1.1"
-notebook = "^7.1.2"
-jupyter = "^1.0.0"
-nbconvert = "^7.16.3"
+[tool.poetry.extras]
+notebooks = ["notebook", "matplotlib"]
+doc = ["Sphinx", "pydata-sphinx-theme", "myst-parser", "matplotlib"]
+test = ["pytest"]
+all = ["notebook", "matplotlib", "Sphinx", "pydata-sphinx-theme", "pytest", "myst-parser"]
 
 [build-system]
 requires = ["poetry-core"]
