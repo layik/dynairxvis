@@ -7,6 +7,7 @@ from .hist import histogram
 from .gantt import gantt
 from .scatter import scatter
 from .heatmap import heatmap
+from .bar import bar
 
 
 # =============================================================================
@@ -68,13 +69,14 @@ def plot(plot_name, *args, **kwargs):
 
     # Mapping of plot_name to plotting function
     plot_functions = {
-        'radar': radar,
-        'dot': dot,
+        'bar': bar,
         'box': box,
-        'hist': histogram,
+        'dot': dot,
         'gantt': gantt,
-        'scatter': scatter,
-        'heatmap': heatmap
+        'heatmap': heatmap,
+        'hist': histogram,
+        'radar': radar,
+        'scatter': scatter
     }
 
     if plot_name in plot_functions:
