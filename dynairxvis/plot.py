@@ -8,7 +8,7 @@ from .gantt import gantt
 from .scatter import scatter
 from .heatmap import heatmap
 from .bar import bar
-
+from .pie import pie
 
 # =============================================================================
 # Internal
@@ -75,6 +75,7 @@ def plot(plot_name, *args, **kwargs):
         'gantt': gantt,
         'heatmap': heatmap,
         'hist': histogram,
+        'pie': pie,
         'radar': radar,
         'scatter': scatter
     }
