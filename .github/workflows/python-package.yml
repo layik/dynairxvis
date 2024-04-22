@@ -1,6 +1,17 @@
+name: Python Package
+
+on:
+  push:
+    paths-ignore:
+      - '**/README.md'
+      - '.readthedocs.yml'
+  pull_request:
+    branches: [ main ]
+
 jobs:
   build:
     runs-on: ${{ matrix.os }}
+
     strategy:
       matrix:
         python-version: ['3.9']
