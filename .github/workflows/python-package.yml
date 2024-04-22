@@ -44,4 +44,4 @@ jobs:
 
     - name: Build docs [Ubuntu only]
       if: runner.os == 'Linux'
-      run: poetry run sphinx-build docs docs/source -b html
+      run: cd docs && make html
