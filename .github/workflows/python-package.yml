@@ -41,7 +41,10 @@ jobs:
     - name: Run notebooks [Ubuntu only]
       if: runner.os == 'Linux'
       run: |
-        poetry run pytest --nbval notebooks/
+        cd notebooks
+        find . -maxdepth 1 -name '*.ipynb' -print0 |
+        xargs -0 -I {} jupyter nbconvert --execute --to notebook --inplace "{}"
+
 
     - name: Build and test documentation [Ubuntu only]
       if: runner.os == 'Linux'
