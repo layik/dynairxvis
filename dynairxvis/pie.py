@@ -70,8 +70,6 @@ def _figure_and_axes(num_plots, fig_kw, **kwargs):
     default_fig_kw.update(fig_kw)
 
     # Create figure and axes
-    print("Creating new figure and axes, open figures before:",
-          plt.get_fignums())
     fig, axs = plt.subplots(1, max(num_plots, 1), **default_fig_kw, **kwargs)
 
     # Ensure axs is iterable, especially when there's only one plot
