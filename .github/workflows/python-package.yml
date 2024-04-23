@@ -33,7 +33,7 @@ jobs:
         poetry install --with dev -vvv
 
     - name: Run tests
-      run: poetry run pytest
+      run: poetry run pytest -vv
 
     - name: Run notebooks [Ubuntu only]
       if: runner.os == 'Linux'
