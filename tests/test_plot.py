@@ -14,14 +14,12 @@ def test_plot_saves_file(mock_show):
     # This requires modifying the radar function to save the plot
     filename = "test_plot.png"
     plot('radar', CATEGORIES, VALUES, filename=filename)
-    # assert os.path.isfile(filename), "Plot file was not created"
-    # os.remove(filename)  # Clean up the file after test
+    assert os.path.isfile(filename), "Plot file was not created"
+    os.remove(filename)  # Clean up the file after test
 
 
 @patch("builtins.print")
 def test_invalid_plot_name(mock_print):
-    print("Testing with unsupported plot type...")
     plot('foo', CATEGORIES, VALUES)
-    print("Call to plot completed, checking assertion...")
     mock_print.assert_called_with("**WARNING: ** 'foo' is not" +
                                   " a supported plot type.")
