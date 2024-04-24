@@ -53,72 +53,81 @@ def grouped_chart(categories, start_dates, end_dates, chart_type='line',
     default_fig_kw.update(fig_kw)
     fig, ax = plt.subplots(**default_fig_kw)
 
-    # Set default markers and cycle through them if not provided
-    default_markers = ['o', '^', 's', '*', '+', 'x', 'D', 'h']
-
-    # Assign unique y-positions based on categories
     unique_cats = sorted(set(categories), key=categories.index)
-    category_positions = {category: pos for pos,
-                          category in enumerate(unique_cats, start=1)}
+    category_positions = {cat: i + 1 for i, cat in enumerate(unique_cats)}
 
-    # Create a color palette with as many gray shades as
-    # there are unique categories
-    # Here, '0.1' avoids pure black and '0.9' avoids pure white.
+    # Color and marker setup
     gray_color_palette = plt.cm.Greys(np.linspace(0.2, 0.8, len(unique_cats)))
-
-    # Check if the user has provided a custom color mapping,
-    # otherwise use the default gray shades
-    if 'category_colors' not in kwargs or not kwargs['category_colors']:
-        category_colors = {category: color for category,
-                           color in zip(unique_cats, gray_color_palette)}
-    else:
-        category_colors = kwargs['category_colors']
-
-    # If markers are not provided, create a cycling
-    # iterator of default markers.
-    if markers is None:
-        marker_iter = itertools.cycle(default_markers)
-        category_markers = {category:
-                            next(marker_iter) for category in unique_cats}
-    else:
-        # Use the provided markers dictionary directly.
-        category_markers = markers
-
-    # Plotting functions with consistent color and marker
-    def _plot_scatter(ax, category, start_date, end_date, position, plot_kw):
-        ax.scatter([start_date, end_date], [position, position],
-                   color=category_colors[category],
-                   marker=category_markers[category], **plot_kw,
-                   label=category if category not in plotted_cats else "")
-        plotted_cats.add(category)
-
-    def _plot_line(ax, category, start_date, end_date, position, plot_kw):
-        ax.plot([start_date, end_date], [position, position],
-                color=category_colors[category],
-                marker=category_markers[category], **plot_kw,
-                label=category if category not in plotted_cats else "")
-        plotted_cats.add(category)
+    # gray_color_palette = 'black'
+    category_colors = kwargs.get('category_colors',
+                                 {cat: color for cat, color in zip(
+                                     unique_cats, gray_color_palette)})
+    default_markers = ['o', '^', 's', '*', '+', 'x', 'D', 'h']
+    marker_cycle = itertools.cycle(default_markers)
+    category_markers = markers or {
+        cat: next(marker_cycle) for cat in unique_cats}
 
     # To keep track of which categories have been plotted
     plotted_cats = set()
-    # Plot based on the specified chart type
-    for start_date, end_date, category in zip(start_dates, end_dates,
-                                              categories):
-        position = category_positions[category]
-        if chart_type == 'scatter':
-            _plot_scatter(ax, category, start_date, end_date,
-                          position, plot_kw)
-        elif chart_type == 'line':
-            _plot_line(ax, category, start_date, end_date,
-                       position, plot_kw)
 
-    # Set axis, legend, and show plot
+    # Function to plot scatter and line plots
+    def _plot_scatter_or_line():
+        for start, end, cat in zip(start_dates, end_dates, categories):
+            position = category_positions[cat]
+            color = category_colors[cat]
+            marker = category_markers[cat]
+            if chart_type == 'scatter':
+                ax.scatter([start, end], [position, position], color=color,
+                           marker=marker, **plot_kw,
+                           label=cat if cat not in plotted_cats else "")
+            elif chart_type == 'line':
+                ax.plot([start, end], [position, position], color=color,
+                        marker=marker, **plot_kw,
+                        label=cat if cat not in plotted_cats else "")
+            plotted_cats.add(cat)
+
+    def _plot_heatmap():
+        # Determine time bins
+        min_date, max_date = min(start_dates), max(end_dates)
+        total_days = (max_date - min_date).days
+        # Increase num_bins based on total duration in days for better granularity
+        num_bins = max(10, total_days // 30)  # Example: ~1 bin per month if possible
+
+        time_bins = np.linspace(mdates.date2num(min_date),
+                                mdates.date2num(max_date), num_bins + 1)
+
+        # Create heatmap data
+        heatmap_data = np.zeros((len(unique_cats), num_bins))
+        for start, end, cat in zip(start_dates, end_dates, categories):
+            cat_idx = unique_cats.index(cat)
+            start_idx = np.searchsorted(time_bins, mdates.date2num(start)) - 1
+            end_idx = np.searchsorted(time_bins, mdates.date2num(end)) - 1
+            # Fill all bins between start_idx and end_idx
+            heatmap_data[cat_idx,
+                         max(0, start_idx):min(end_idx + 1, num_bins)] = 1
+
+        # Plotting the heatmap
+        ax.imshow(heatmap_data, aspect='auto', cmap='Greys',
+                  extent=[mdates.num2date(time_bins[0]),
+                          mdates.num2date(time_bins[-1]), 0,
+                          len(unique_cats)], origin='lower')
+        # fig.colorbar(cax, ax=ax)
+        ax.set_yticks(np.arange(len(unique_cats)))
+        ax.set_yticklabels(unique_cats)
+        ax.xaxis_date()
+
+    if chart_type == 'scatter' or chart_type == 'line':
+        _plot_scatter_or_line()
+    elif chart_type == 'heatmap':
+        _plot_heatmap()
+
+    # Common plot settings
     plt.yticks(range(1, len(unique_cats) + 1), unique_cats)
     ax.xaxis_date()
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y'))
     plt.xlabel(kwargs.get('xlabel', 'Date'))
     plt.title(kwargs.get('title', f'{chart_type.capitalize()} Chart'))
-    if kwargs.get('legend', True):
+    if kwargs.get('legend', True) and chart_type != 'heatmap':
         ax.legend(title="Categories", loc="best")
     plt.tight_layout()
     plt.show()

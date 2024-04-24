@@ -5,10 +5,17 @@ from .dot import dot
 from .box import box
 from .hist import histogram
 from .gantt import gantt
+from .time import line
 from .scatter import scatter
 from .heatmap import heatmap
 from .bar import bar
 from .pie import pie
+
+# For threshold of:  50.0 . These will be kept (10)
+# {'Line', 'Table', 'Bar', 'List (Table)', 'Histogram', 'Dot',
+# 'Gantt chart', 'Heatmap', 'Pie', 'Scatter'}
+# For threshold of:  50.0 . These will be ropped (4)
+# {'Violin', 'Box', 'Radar', 'Donut'}
 
 
 # =============================================================================
@@ -74,6 +81,7 @@ def plot(plot_name, *args, **kwargs):
         'box': box,
         'dot': dot,
         'gantt': gantt,
+        'line': line,
         'heatmap': heatmap,
         'hist': histogram,
         'pie': pie,

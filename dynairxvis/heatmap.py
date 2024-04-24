@@ -1,31 +1,56 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from .time import grouped_chart
 
 
-def heatmap(categories, values, fig_kw={}, cmap='Greys', **kwargs):
+def heatmap(categories, values=None, start_dates=None, end_dates=None,
+            mode='heatmap', fig_kw={}, cmap='Greys', **kwargs):
     """
-    Creates and displays a heatmap for given categories and associated values.
+    Creates and displays a heatmap for given categories
+    and associated values or time intervals.
 
     Parameters
     ----------
     categories : list of str
         The categories for the y-axis of the heatmap.
-    values : list of int or float, as flat or nested list.
+    values : list of int or float, as flat or nested list (for 'value' mode).
         The values associated with each category.
+    start_dates, end_dates : list of datetime (for 'time' mode)
+        Start and end dates for each category interval.
+    mode : str, optional
+        'heatmap' for a standard value-based heatmap,
+        'gantt' for a time-interval based heatmap.
     fig_kw : dict, optional
         Keyword arguments for plt.subplots() to customize the figure.
     cmap : str or Colormap, optional
         The colormap to use for the heatmap.
     **kwargs : dict
         Additional keyword arguments for customization such as 'xlabel',
-        'ylabel', and 'title'.
+        'ylabel', 'title', and 'colorbar'.
 
     Examples
     --------
     >>> categories = ['Category 1', 'Category 2', 'Category 3']
     >>> values = [1, 2, 3]
-    >>> heatmap(categories, values)
+    >>> heatmap(categories, values=values, mode='value')
+    >>> start_dates = [datetime(2020, 1, 1), datetime(2020, 6, 1),
+        datetime(2020, 8, 1)]
+    >>> end_dates = [datetime(2020, 3, 1), datetime(2020, 9, 1),
+        datetime(2020, 12, 1)]
+    >>> heatmap(categories, start_dates=start_dates, end_dates=end_dates,
+        mode='gantt')
     """
+    if mode not in ['gantt', 'heatmap']:
+        raise ValueError(
+            "Invalid mode specified. Use 'heatmap' or 'gantt'.")
+
+    if mode == 'gantt' and (start_dates is None or end_dates is None):
+        raise ValueError(
+            "Start and end dates must be provided for 'gantt' mode.")
+    if mode == 'gantt':
+        return grouped_chart(categories, start_dates, end_dates,
+                             chart_type='heatmap', fig_kw=fig_kw, **kwargs)
+
     # Improved flattening function that checks type of each item
     def flatten(values):
         flattened_values = []
