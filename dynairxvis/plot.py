@@ -166,6 +166,8 @@ def plot_charts(df, column_refs=[], **kwargs):
         print(f"Plotting bar chart with categories from {n_col} and" +
               " values from {q_col}...")
         bar(df[n_col], df[q_col], **kwargs)
-
+        scatter(df[n_col], values=df[q_col], mode='scatter')
+        heatmap(df[n_col], values=df[q_col], mode='heatmap')
+        pie(df[n_col], df[q_col])
     else:
         print("No suitable plot type found for the columns or data types.")
