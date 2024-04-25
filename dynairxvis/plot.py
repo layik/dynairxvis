@@ -10,7 +10,7 @@ from .scatter import scatter
 from .heatmap import heatmap
 from .bar import bar
 from .pie import pie
-from .utils import profile
+from .utils import profile, findIndex
 
 # For threshold of:  50.0 . These will be kept (10)
 # 'Line', 'Table', 'Bar', 'List (Table)', 'Histogram', 'Dot',
@@ -149,25 +149,41 @@ def plot_charts(df, column_refs=[], **kwargs):
 
     col_types, col_codes, charts = profile(df[col_names],
                                            col_count=len(col_names))
-
+    print(col_codes)
     # Decision structure for plotting based on type codes and number of columns
     if len(col_names) == 1 and col_codes == 'Q':
-        # Ensure the single column is quantitative for histogram
         print(f"Plotting histogram for {col_names[0]}...")
         histogram(df[col_names[0]], **kwargs)
-
-    elif (len(col_names) == 2 and 'N' in col_types.values()
-          and 'Q' in col_types.values()):
+    elif len(col_names) == 1 and col_codes == 'N':
+        print('Coming...')
+    elif (len(col_names) == 2 and col_codes == 'NQ'):
         # Find the nominal and quantitative columns
         n_col = next(col for col,
                      dtype in col_types.items() if dtype == 'N')
         q_col = next(col for col,
                      dtype in col_types.items() if dtype == 'Q')
-        print(f"Plotting bar chart with categories from {n_col} and" +
-              " values from {q_col}...")
+        # print(f"Plotting bar chart with categories from {n_col} and" +
+        #       " values from {q_col}...")
         bar(df[n_col], df[q_col], **kwargs)
         scatter(df[n_col], values=df[q_col], mode='scatter')
         heatmap(df[n_col], values=df[q_col], mode='heatmap')
         pie(df[n_col], df[q_col])
+    elif len(col_names) == 3 and col_codes == 'NTT':
+        # NT
+        a = col_names.copy()
+        a = [x.lower() for x in a]
+        n_col = next(col for col,
+                     dtype in col_types.items() if dtype == 'N')
+        start = df[col_names[findIndex(a, 'start')]]
+        end = df[col_names[findIndex(a, 'end')]]
+        gantt(df[n_col], start, end)
+        pie(df[n_col], start_dates=start, end_dates=end, time=True)
+        line(df[n_col], start_dates=start, end_dates=end)
+        scatter(df[n_col], start_dates=start, end_dates=end, mode='gantt')
+        heatmap(df[n_col], start_dates=start, end_dates=end, mode='gantt')
+    elif len(col_names) == 3 and col_codes == 'NOT':
+        print('NTO charts coming...')
+    elif len(col_names) == 3 and col_codes == 'NQT':
+        print('NQT charts coming...')
     else:
         print("No suitable plot type found for the columns or data types.")

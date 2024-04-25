@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import numpy as np
+import pandas as pd
 import itertools
 from .utils import FIG_SIZE
 
@@ -48,6 +49,10 @@ def grouped_chart(categories, start_dates, end_dates, chart_type='line',
     >>> grouped_chart(categories, start_dates, end_dates, chart_type='scatter',
         markers=markers)
     """
+    # TODO: input validations
+    if isinstance(categories, pd.Series):
+        categories = categories.tolist()
+
     # Set default figure properties
     default_fig_kw = FIG_SIZE
     default_fig_kw.update(fig_kw)

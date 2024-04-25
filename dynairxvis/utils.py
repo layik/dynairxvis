@@ -1,11 +1,12 @@
 import pandas as pd
+import numpy as np
 
 FIG_SIZE = {'figsize': (6, 4)}
 NOQT = ['Gantt', 'Line', 'Heatmap', 'Scatter']
 DT_CHARTS = {"Q": ['Histogram'],
              "N": ['List (Table)', 'Pie'],
              "NQ": ['Bar', 'Scatter', 'Heatmap', 'Table', 'Pie'],
-             "NT": ['Gantt', 'Pie', 'Line', 'Donut3', 'Scatter', 'Heatmap'],
+             "NT": ['Gantt', 'Pie', 'Line', 'Scatter', 'Heatmap'],
              "NOT": NOQT,
              "NQT": NOQT
              }
@@ -79,3 +80,23 @@ def profile(df, col_count=3):
         return col_types, col_codes, suggested_charts
     except Exception as e:
         raise RuntimeError(f"Failed to profile the DataFrame: {str(e)}")
+
+
+def findIndex(a, str):
+    return [idx for idx, s in enumerate(a) if str in s][0]
+
+
+def is_valid_array(input_array):
+    """
+    Checks if the provided input is an array-like object and is not empty.
+
+    Parameters:
+    input_array : list, np.ndarray, pd.Series
+        The input to check for array-like and non-empty properties.
+
+    Returns:
+    bool
+        True if the input is array-like and non-empty, False otherwise.
+    """
+    return isinstance(
+        input_array, (list, np.ndarray, pd.Series)) and len(input_array) > 0

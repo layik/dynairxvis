@@ -1,5 +1,7 @@
 import matplotlib.pyplot as plt
 from collections import defaultdict
+from .utils import is_valid_array
+
 gray_color_palette = ['grey', 'none']
 
 
@@ -33,13 +35,13 @@ def pie(categories, values=None, time=False, start_dates=None,
     >>> pie(categories, values)
     """
     if time:
-        if (not start_dates or not end_dates or
-            len(start_dates) != len(end_dates) or
-            len(categories) != len(start_dates)):
+        if not is_valid_array(start_dates):
+            raise ValueError("start_dates must be a valid array.")
+        if not is_valid_array(end_dates):
+            raise ValueError("end_dates must be a valid array.")
+        if len(start_dates) != len(end_dates):
             raise ValueError(
-                "start_dates and end_dates must be provided and match the "
-                "length of categories when time=True."
-            )
+                "start_dates and end_dates must have equal lengths.")
         return _grouped_pie(categories, start_dates, end_dates,
                             fig_kw=fig_kw, **kwargs)
     else:
@@ -80,6 +82,14 @@ def _figure_and_axes(num_plots, fig_kw, **kwargs):
 
 
 def _pie(categories, values, fig_kw, **kwargs):
+    if not is_valid_array(categories):
+        raise ValueError(
+            "categories must be a valid array."
+        )
+    if not is_valid_array(values):
+        raise ValueError(
+            "values must be a valid array."
+        )
     if len(categories) != len(values):
         raise ValueError(
                 "categories and values must have equal lengths."
