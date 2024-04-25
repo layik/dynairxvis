@@ -68,7 +68,7 @@ plot_functions = {
 }
 
 
-def plot(plot_name, **kwargs):
+def plot(plot_name, *args, **kwargs):
     """
     High-level plotting function that dispatches to specific plotting functions
     based on plot_name. It then shows the plot or saves it to a file.
@@ -77,6 +77,8 @@ def plot(plot_name, **kwargs):
     ----------
     plot_name : str
         The name of the plot type to generate.
+    *args : tuple
+        Positional arguments passed directly to the plotting function.
     **kwargs : dict
         Keyword arguments passed directly to the plotting function. It should
         include 'filename' and 'overwrite' if saving the plot is desired.
@@ -85,7 +87,8 @@ def plot(plot_name, **kwargs):
     -------
     None.
     """
-    # Extract filename and overwrite from kwargs, defaulting to None and False if not present
+    # Extract filename and overwrite from kwargs, defaulting to None and False
+    # if not present
     filename = kwargs.pop('filename', None)
     overwrite = kwargs.pop('overwrite', False)
 
@@ -93,7 +96,7 @@ def plot(plot_name, **kwargs):
         # Create the plot
         plot_func = plot_functions[plot_name]
         # Ensure plot functions return fig, ax
-        plot_func(**kwargs)
+        plot_func(*args, **kwargs)
     else:
         print(f"**WARNING: ** '{plot_name}' is not a supported plot type.")
 
