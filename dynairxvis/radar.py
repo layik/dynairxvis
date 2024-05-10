@@ -2,6 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from .utils import FIG_SIZE
 
+# TODO: we may end up not using this function
+
 
 def radar(categories, values, fig_kw={}, ax_kw={}, **kwargs):
     """

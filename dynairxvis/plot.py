@@ -10,6 +10,7 @@ from .scatter import scatter
 from .heatmap import heatmap
 from .bar import bar
 from .pie import pie
+from .violin import violin
 from .utils import profile, findIndex
 
 # For threshold of:  50.0 . These will be kept (10)
@@ -64,7 +65,8 @@ plot_functions = {
     'hist': histogram,
     'pie': pie,
     'radar': radar,
-    'scatter': scatter
+    'scatter': scatter,
+    'violin': violin
 }
 
 
@@ -149,6 +151,7 @@ def plot_charts(df, column_refs=[], **kwargs):
 
     col_types, col_codes, charts = profile(df[col_names],
                                            col_count=len(col_names))
+    # TODO: Remove print statements
     print(col_codes)
     a = col_names.copy()
     a = [x.lower() for x in a]
@@ -158,6 +161,8 @@ def plot_charts(df, column_refs=[], **kwargs):
     if len(col_names) == 1 and col_codes == 'Q':
         print(f"Plotting histogram for {col_names[0]}...")
         histogram(df[col_names[0]], **kwargs)
+        violin(df[col_names[0]], **kwargs)
+        box(df[col_names[0]], **kwargs)
     elif len(col_names) == 1 and col_codes == 'N':
         print('Coming...')
     elif (len(col_names) == 2 and col_codes == 'NQ'):
