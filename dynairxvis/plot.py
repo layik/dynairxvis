@@ -150,6 +150,10 @@ def plot_charts(df, column_refs=[], **kwargs):
     col_types, col_codes, charts = profile(df[col_names],
                                            col_count=len(col_names))
     print(col_codes)
+    a = col_names.copy()
+    a = [x.lower() for x in a]
+    n_col = next((col for col, dtype in col_types.items() if dtype == 'N'),
+                 None)
     # Decision structure for plotting based on type codes and number of columns
     if len(col_names) == 1 and col_codes == 'Q':
         print(f"Plotting histogram for {col_names[0]}...")
@@ -157,9 +161,6 @@ def plot_charts(df, column_refs=[], **kwargs):
     elif len(col_names) == 1 and col_codes == 'N':
         print('Coming...')
     elif (len(col_names) == 2 and col_codes == 'NQ'):
-        # Find the nominal and quantitative columns
-        n_col = next(col for col,
-                     dtype in col_types.items() if dtype == 'N')
         q_col = next(col for col,
                      dtype in col_types.items() if dtype == 'Q')
         # print(f"Plotting bar chart with categories from {n_col} and" +
@@ -170,10 +171,6 @@ def plot_charts(df, column_refs=[], **kwargs):
         pie(df[n_col], df[q_col])
     elif len(col_names) == 3 and col_codes == 'NTT':
         # NT
-        a = col_names.copy()
-        a = [x.lower() for x in a]
-        n_col = next(col for col,
-                     dtype in col_types.items() if dtype == 'N')
         start = df[col_names[findIndex(a, 'start')]]
         end = df[col_names[findIndex(a, 'end')]]
         gantt(df[n_col], start, end)
