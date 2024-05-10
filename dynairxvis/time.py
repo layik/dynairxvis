@@ -7,7 +7,7 @@ from .utils import FIG_SIZE
 
 
 def grouped_chart(categories, start_dates, end_dates, chart_type='line',
-                  markers=None, fig_kw={}, plot_kw={}, **kwargs):
+                  values=None, markers=None, fig_kw={}, plot_kw={}, **kwargs):
     """
     Creates and displays a grouped chart (line, scatter, or Gantt)
     based on the provided data.
@@ -23,6 +23,9 @@ def grouped_chart(categories, start_dates, end_dates, chart_type='line',
     chart_type : str, optional
         Type of chart to create ('line', 'scatter', 'gantt').
         Default is 'line'.
+    values : array-like, optional
+        An optional array of numeric or ordered categorical values used to
+        determine the color intensity or shade of the plot elements.
     markers : dict, optional
         Dictionary mapping categories to custom marker styles
         (for scatter plots).
@@ -59,14 +62,11 @@ def grouped_chart(categories, start_dates, end_dates, chart_type='line',
     fig, ax = plt.subplots(**default_fig_kw)
 
     unique_cats = sorted(set(categories), key=categories.index)
-    category_positions = {cat: i + 1 for i, cat in enumerate(unique_cats)}
+    category_colors = _get_cat_cols(categories, unique_cats, values, kwargs)
 
-    # Color and marker setup
-    gray_color_palette = plt.cm.Greys(np.linspace(0.2, 0.8, len(unique_cats)))
-    # gray_color_palette = 'black'
-    category_colors = kwargs.get('category_colors',
-                                 {cat: color for cat, color in zip(
-                                     unique_cats, gray_color_palette)})
+    # category_colors = kwargs.get('category_colors',
+    #                              {cat: color for cat, color in zip(
+    #                                  unique_cats, gray_color_palette)})
     default_markers = ['o', '^', 's', '*', '+', 'x', 'D', 'h']
     marker_cycle = itertools.cycle(default_markers)
     category_markers = markers or {
@@ -74,6 +74,7 @@ def grouped_chart(categories, start_dates, end_dates, chart_type='line',
 
     # To keep track of which categories have been plotted
     plotted_cats = set()
+    category_positions = {cat: i + 1 for i, cat in enumerate(unique_cats)}
 
     # Function to plot scatter and line plots
     def _plot_scatter_or_line():
@@ -95,8 +96,10 @@ def grouped_chart(categories, start_dates, end_dates, chart_type='line',
         # Determine time bins
         min_date, max_date = min(start_dates), max(end_dates)
         total_days = (max_date - min_date).days
-        # Increase num_bins based on total duration in days for better granularity
-        num_bins = max(10, total_days // 30)  # Example: ~1 bin per month if possible
+        # Increase num_bins based on total duration in days for better
+        # granularity
+        # Example: ~1 bin per month if possible
+        num_bins = max(10, total_days // 30)
 
         time_bins = np.linspace(mdates.date2num(min_date),
                                 mdates.date2num(max_date), num_bins + 1)
@@ -132,14 +135,80 @@ def grouped_chart(categories, start_dates, end_dates, chart_type='line',
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y'))
     plt.xlabel(kwargs.get('xlabel', 'Date'))
     plt.title(kwargs.get('title', f'{chart_type.capitalize()} Chart'))
-    if kwargs.get('legend', True) and chart_type != 'heatmap':
+    # Adjust legend handling based on the presence of 'values'
+    if 'values' in kwargs and pd.api.types.is_numeric_dtype(kwargs['values']):
+        # Create a colorbar if values are used for coloring
+        sm = plt.cm.ScalarMappable(
+            cmap=plt.cm.Greys,
+            norm=plt.Normalize(vmin=kwargs['values'].min(),
+                               vmax=kwargs['values'].max()))
+        sm._A = []  # Fake up the array of the scalar mappable.
+        cbar = plt.colorbar(sm, ax=ax)
+        cbar.set_label('Value Scale')
+    elif kwargs.get('legend', True) and chart_type != 'heatmap':
+        # Standard category legend
         ax.legend(title="Categories", loc="best")
     plt.tight_layout()
     plt.show()
 
 
-def line(categories, start_dates, end_dates, markers=None, fig_kw={},
-         plot_kw={}, **kwargs):
+def _get_cat_cols(categories, unique_cats, values, kwargs):
+    # Color and marker setup
+    gray_color_palette = plt.cm.Greys(np.linspace(0.2, 0.8, len(unique_cats)))
+    # gray_color_palette = 'black'
+    # Check for user-provided category colors in kwargs
+    category_colors = kwargs.get('category_colors')
+
+    if category_colors is None:
+        if values is not None:
+            # Handle numeric and ordinal values
+            # Check if values are numeric; if not, try converting them
+            if isinstance(values, list):
+                values = pd.Series(values)
+            if pd.api.types.is_numeric_dtype(values):
+                if values.max() == values.min():
+                    normalized_values = pd.Series([0.9] * len(values))
+                else:
+                    normalized_values = (values - values.min()) / (
+                        values.max() - values.min())
+            elif pd.api.types.is_categorical_dtype(values):
+                # Attempt to convert to ordered categorical if it's not numeric
+                try:
+                    values = pd.Categorical(values, ordered=True)
+                    numeric_values = values.codes
+                    normalized_values = (
+                        numeric_values - numeric_values.min()) / (
+                            numeric_values.max() - numeric_values.min())
+                except Exception as e:
+                    print("Warning: failed to convert values to ordered " +
+                          f"categorical. {str(e)}")
+                    return  # Exit if conversion fails
+            else:
+                print("Warning: 'values' must be numeric or ordered " +
+                      "categorical to use for color scaling. Defaulting to " +
+                      "grayscale.")
+                normalized_values = np.linspace(0.2, 0.8, len(categories))
+
+            # Map normalized values to grayscale
+            category_colors = {
+                cat: plt.cm.Greys(0.2 + 0.6 * val) for cat,
+                val in zip(categories, normalized_values)}
+        else:
+            # Default to uniform grayscale if no values are provided
+            category_colors = {
+                cat: color for cat, color in zip(unique_cats,
+                                                 gray_color_palette)}
+    else:
+        # Use provided category colors if specified
+        category_colors = {
+            cat: color for cat, color in zip(unique_cats,
+                                             category_colors)}
+
+    return category_colors
+
+
+def line(categories, start_dates, end_dates, values=None, markers=None,
+         fig_kw={}, plot_kw={}, **kwargs):
     """
     Creates and displays a line chart for a series of tasks or events
     defined by their categories and corresponding start and end dates.
@@ -159,6 +228,9 @@ def line(categories, start_dates, end_dates, markers=None, fig_kw={},
     end_dates : list of datetime
         The end dates for each task/event. Each end date corresponds to the
         end of a line segment for its category.
+    values : array-like, optional
+        An optional array of numeric or ordered categorical values used to
+        determine the color intensity or shade of the plot elements.
     markers : dict, optional
         A dictionary mapping categories to custom marker styles that denote
         the start and end of each line segment. If not provided, a default
@@ -188,4 +260,5 @@ def line(categories, start_dates, end_dates, markers=None, fig_kw={},
     >>> line(categories, start_dates, end_dates, markers=markers)
     """
     grouped_chart(categories, start_dates, end_dates, chart_type='line',
-                  markers=markers, fig_kw=fig_kw, plot_kw=plot_kw, **kwargs)
+                  values=values, markers=markers, fig_kw=fig_kw,
+                  plot_kw=plot_kw, **kwargs)
