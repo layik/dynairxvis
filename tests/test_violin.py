@@ -21,7 +21,8 @@ def test_violin_creates_plot(mock_show):
     fig = plt.gcf()
     ax = fig.axes[0]
     # Check if the plot is horizontal by comparing width and height
-    violin_width, violin_height = ax.get_position().width, ax.get_position().height
+    violin_width, violin_height = (ax.get_position().width,
+                                   ax.get_position().height)
     assert violin_height < violin_width, "Violin plot is not horizontal"
 
     plt.close(fig)  # Close the figure after test

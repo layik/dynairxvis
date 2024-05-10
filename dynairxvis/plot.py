@@ -152,11 +152,17 @@ def plot_charts(df, column_refs=[], **kwargs):
     col_types, col_codes, charts = profile(df[col_names],
                                            col_count=len(col_names))
     # TODO: Remove print statements
-    print(col_codes)
+    print(col_codes, col_names)
     a = col_names.copy()
     a = [x.lower() for x in a]
     n_col = next((col for col, dtype in col_types.items() if dtype == 'N'),
                  None)
+    o_col = next((col for col, dtype in col_types.items() if dtype == 'O'),
+                 None)
+    q_col = next((col for col, dtype in col_types.items() if dtype == 'Q'),
+                 None)
+    start = df[col_names[findIndex(a, 'start')]]
+    end = df[col_names[findIndex(a, 'end')]]
     # Decision structure for plotting based on type codes and number of columns
     if len(col_names) == 1 and col_codes == 'Q':
         print(f"Plotting histogram for {col_names[0]}...")
@@ -176,16 +182,16 @@ def plot_charts(df, column_refs=[], **kwargs):
         pie(df[n_col], df[q_col])
     elif len(col_names) == 3 and col_codes == 'NTT':
         # NT
-        start = df[col_names[findIndex(a, 'start')]]
-        end = df[col_names[findIndex(a, 'end')]]
         gantt(df[n_col], start, end)
         pie(df[n_col], start_dates=start, end_dates=end, time=True)
         line(df[n_col], start_dates=start, end_dates=end)
         scatter(df[n_col], start_dates=start, end_dates=end, mode='gantt')
         heatmap(df[n_col], start_dates=start, end_dates=end, mode='gantt')
-    elif len(col_names) == 3 and col_codes == 'NOT':
+    elif len(col_names) == 4 and col_codes == 'NOTT':
+        gantt(df[n_col], start, end, df[o_col])
         print('NTO charts coming...')
-    elif len(col_names) == 3 and col_codes == 'NQT':
+    elif len(col_names) == 4 and col_codes == 'NQTT':
+        gantt(df[n_col], start, end, df[q_col])
         print('NQT charts coming...')
     else:
         print("No suitable plot type found for the columns or data types.")

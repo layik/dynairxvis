@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import matplotlib.cm as cm
 
 FIG_SIZE = {'figsize': (6, 4)}
 NOQT = ['Gantt', 'Line', 'Heatmap', 'Scatter']
@@ -83,7 +84,8 @@ def profile(df, col_count=3):
 
 
 def findIndex(a, str):
-    return [idx for idx, s in enumerate(a) if str in s][0]
+    indices = [idx for idx, s in enumerate(a) if str in s]
+    return indices[0] if indices else 0
 
 
 def is_valid_array(input_array):
@@ -100,3 +102,10 @@ def is_valid_array(input_array):
     """
     return isinstance(
         input_array, (list, np.ndarray, pd.Series)) and len(input_array) > 0
+
+
+def get_color_palette(n_colors):
+    """
+    Generate a grayscale color palette with n distinct colors.
+    """
+    return [cm.Greys(i / n_colors) for i in range(n_colors)]

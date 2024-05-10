@@ -46,7 +46,9 @@ class TestPlotCharts(unittest.TestCase):
 
         # Check the output
         output = captured_output.getvalue()
-        self.assertIn("No suitable plot type found for the columns or data types.", output)
+        self.assertIn(
+            "No suitable plot type found for the columns or data types.",
+            output)
 
     def tearDown(self):
         # Ensure stdout is restored if an error occurs during the test
