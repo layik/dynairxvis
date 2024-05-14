@@ -62,7 +62,7 @@ def grouped_chart(categories, start_dates, end_dates, chart_type='line',
     fig, ax = plt.subplots(**default_fig_kw)
 
     unique_cats = sorted(set(categories), key=categories.index)
-    category_colors = _get_cat_cols(categories, unique_cats, values, kwargs)
+    category_colors = _get_cat_cols(categories, values, kwargs)
 
     # category_colors = kwargs.get('category_colors',
     #                              {cat: color for cat, color in zip(
@@ -135,24 +135,40 @@ def grouped_chart(categories, start_dates, end_dates, chart_type='line',
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y'))
     plt.xlabel(kwargs.get('xlabel', 'Date'))
     plt.title(kwargs.get('title', f'{chart_type.capitalize()} Chart'))
-    # Adjust legend handling based on the presence of 'values'
-    if 'values' in kwargs and pd.api.types.is_numeric_dtype(kwargs['values']):
-        # Create a colorbar if values are used for coloring
-        sm = plt.cm.ScalarMappable(
-            cmap=plt.cm.Greys,
-            norm=plt.Normalize(vmin=kwargs['values'].min(),
-                               vmax=kwargs['values'].max()))
-        sm._A = []  # Fake up the array of the scalar mappable.
-        cbar = plt.colorbar(sm, ax=ax)
-        cbar.set_label('Value Scale')
-    elif kwargs.get('legend', True) and chart_type != 'heatmap':
+
+    if values is not None:
+        if pd.api.types.is_numeric_dtype(values):
+            # Create a colorbar if values are used for coloring
+            sm = plt.cm.ScalarMappable(
+                cmap=plt.cm.Greys,
+                norm=plt.Normalize(vmin=values.min(), vmax=values.max()))
+            sm._A = []  # Fake up the array of the scalar mappable.
+            cbar = plt.colorbar(sm, ax=ax)
+            cbar.set_label('Value Scale')
+        elif pd.api.types.is_categorical_dtype(values):
+            # Generate a legend based on the unique "values"
+            unique_values = pd.Categorical(values).categories
+            value_to_category_map = {
+                val: categories[values.tolist().index(val)]
+                for val in unique_values}
+            handles = [
+                plt.Line2D([0], [0],
+                           color=category_colors[value_to_category_map[val]],
+                           lw=4) for val in unique_values]
+
+            # Convert unique_values to a list to avoid issues with pandas Index
+            unique_values_list = unique_values.tolist()
+            ax.legend(handles=handles, labels=unique_values_list,
+                      title="Values", loc="best")
+    elif kwargs.get('legend', False) and chart_type != 'heatmap':
         # Standard category legend
         ax.legend(title="Categories", loc="best")
     plt.tight_layout()
     plt.show()
 
 
-def _get_cat_cols(categories, unique_cats, values, kwargs):
+def _get_cat_cols(categories, values, kwargs):
+    unique_cats = sorted(set(categories), key=categories.index)
     # Color and marker setup
     gray_color_palette = plt.cm.Greys(np.linspace(0.2, 0.8, len(unique_cats)))
     # gray_color_palette = 'black'
@@ -189,15 +205,14 @@ def _get_cat_cols(categories, unique_cats, values, kwargs):
                       "grayscale.")
                 normalized_values = np.linspace(0.2, 0.8, len(categories))
 
-            # Map normalized values to grayscale
+            # Map normalized values to grayscale using categories as keys
             category_colors = {
                 cat: plt.cm.Greys(0.2 + 0.6 * val) for cat,
                 val in zip(categories, normalized_values)}
         else:
             # Default to uniform grayscale if no values are provided
-            category_colors = {
-                cat: color for cat, color in zip(unique_cats,
-                                                 gray_color_palette)}
+            single_color = plt.cm.Greys(0.8)  # gray color
+            category_colors = {cat: single_color for cat in unique_cats}
     else:
         # Use provided category colors if specified
         category_colors = {

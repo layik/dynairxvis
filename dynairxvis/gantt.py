@@ -49,15 +49,17 @@ def gantt(categories, start_dates, end_dates, bar_colors=None, fig_kw={},
     # categories
     if bar_colors is None:
         unique_cats = list(set(categories))
-        unique_colors = dict(zip(unique_cats,
-                                 get_color_palette(len(unique_cats))))
+        single_color = plt.cm.Greys(0.8)  # Gray color
+        unique_colors = {cat: single_color for cat in unique_cats}
     else:
         unique_cats = list(set(bar_colors))
         unique_colors = dict(zip(unique_cats,
                                  get_color_palette(len(unique_cats))))
-    print(unique_cats)
+
+    # Track which categories have been added to the legend
+    legend_patches = {}
+
     # Plot each task using the provided plot kwargs
-    legend_patches = []
     for i, (category, start, end) in enumerate(zip(categories, start_dates,
                                                    end_dates)):
         color_key = (bar_colors[i]
@@ -66,7 +68,10 @@ def gantt(categories, start_dates, end_dates, bar_colors=None, fig_kw={},
         color = unique_colors.get(color_key, 'black')
         ax.barh(category, end - start, left=start,
                 height=0.4, color=color, edgecolor='black', **plot_kw)
-        legend_patches.append(Patch(color=color, label=color_key))
+
+        # Only add unique categories to the legend
+        if color_key not in legend_patches:
+            legend_patches[color_key] = Patch(color=color, label=color_key)
 
     # Set the x-axis to use a date format, if not overridden by kwargs
     if not kwargs.get('suppress_date_format'):
@@ -80,14 +85,14 @@ def gantt(categories, start_dates, end_dates, bar_colors=None, fig_kw={},
             [min(start_dates) - (max(end_dates) - min(start_dates)) / 10,
              max(end_dates) + (max(end_dates) - min(start_dates)) / 10])
 
-    # Add grid, labels, and title using kwargs
-    ax.grid(True)
+    # Add labels, and title using kwargs
+    # ax.grid(True)
     plt.xlabel(kwargs.get('xlabel', 'Time'))
     plt.title(kwargs.get('title', 'Gantt Chart'))
 
     # Add legend if bar_colors is provided
     if bar_colors is not None and not bar_colors.empty:
-        plt.legend(handles=legend_patches, title='bar_colors')
+        plt.legend(handles=list(legend_patches.values()), title='bar_colors')
 
     plt.tight_layout()
     plt.show()

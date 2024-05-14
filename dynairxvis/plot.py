@@ -189,9 +189,13 @@ def plot_charts(df, column_refs=[], **kwargs):
         heatmap(df[n_col], start_dates=start, end_dates=end, mode='gantt')
     elif len(col_names) == 4 and col_codes == 'NOTT':
         gantt(df[n_col], start, end, df[o_col])
+        line(df[n_col], start_dates=start, end_dates=end, values=df[o_col])
+
+        # ['Gantt', 'Line', 'Heatmap', 'Scatter']
         print('NTO charts coming...')
     elif len(col_names) == 4 and col_codes == 'NQTT':
         gantt(df[n_col], start, end, df[q_col])
+        # ['Gantt', 'Line', 'Heatmap', 'Scatter']
         print('NQT charts coming...')
     else:
         print("No suitable plot type found for the columns or data types.")
