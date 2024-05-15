@@ -5,7 +5,7 @@ from .dot import dot
 from .box import box
 from .hist import histogram
 from .gantt import gantt
-from .time import line
+from .time import line, grouped_chart
 from .scatter import scatter
 from .heatmap import heatmap
 from .bar import bar
@@ -195,6 +195,9 @@ def plot_charts(df, column_refs=[], **kwargs):
         print('NTO charts coming...')
     elif len(col_names) == 4 and col_codes == 'NQTT':
         gantt(df[n_col], start, end, df[q_col])
+        gantt(df[n_col], start, end, df[q_col], use_values_as_height=True)
+        # not coloring the heatmap based on values yet!
+        grouped_chart(df[n_col], start, end, values=df[q_col], chart_type='heatmap')
         # ['Gantt', 'Line', 'Heatmap', 'Scatter']
         print('NQT charts coming...')
     else:
