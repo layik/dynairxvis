@@ -188,17 +188,64 @@ def plot_charts(df, column_refs=[], **kwargs):
         scatter(df[n_col], start_dates=start, end_dates=end, mode='gantt')
         heatmap(df[n_col], start_dates=start, end_dates=end, mode='gantt')
     elif len(col_names) == 4 and col_codes == 'NOTT':
-        gantt(df[n_col], start, end, df[o_col])
-        line(df[n_col], start_dates=start, end_dates=end, values=df[o_col])
-
+        print('NTO charts...')
+        nott_nqtt(df[n_col], start, end, df[o_col])
         # ['Gantt', 'Line', 'Heatmap', 'Scatter']
-        print('NTO charts coming...')
     elif len(col_names) == 4 and col_codes == 'NQTT':
-        gantt(df[n_col], start, end, df[q_col])
-        gantt(df[n_col], start, end, df[q_col], use_values_as_height=True)
-        # not coloring the heatmap based on values yet!
-        grouped_chart(df[n_col], start, end, values=df[q_col], chart_type='heatmap')
+        print('NQT charts...')
+        nott_nqtt(df[n_col], start, end, df[q_col])
         # ['Gantt', 'Line', 'Heatmap', 'Scatter']
-        print('NQT charts coming...')
     else:
         print("No suitable plot type found for the columns or data types.")
+
+
+def nott_nqtt(categories, starts, ends, values):
+    """
+    Utility function to plot Gantt, Line, Heatmap, and Scatter plots.
+
+    Parameters
+    ----------
+    categories : list of str
+        The categories or names for the tasks or events.
+    starts : list of datetime
+        The start dates for each task or event.
+    ends : list of datetime
+        The end dates for each task or event.
+    values : list of numeric or str, optional
+        The values associated with each category. These can be used to adjust
+        bar heights, line colors, or other plot characteristics.
+
+    Raises
+    ------
+    ValueError
+        If the input lists (categories, starts, ends, values) do not have the
+        same length.
+
+    Examples
+    --------
+    >>> categories = ['Task A', 'Task B', 'Task C']
+    >>> starts = [datetime(2020, 1, 1), datetime(2020, 6, 1),
+        datetime(2020, 8, 1)]
+    >>> ends = [datetime(2021, 1, 1), datetime(2020, 7, 1),
+        datetime(2020, 9, 1)]
+    >>> values = [2, 4, 6]
+    >>> nott_nqtt(categories, starts, ends, values)
+    """
+    # Input validation
+    if not (len(categories) == len(starts) == len(ends) == len(values)):
+        raise ValueError("All input lists must have the same length to \
+            generate Gantt, Line, Heatmap, and Scatter plots.")
+
+    # Plot Gantt chart
+    gantt(categories, starts, ends, values)
+
+    # Plot Line chart
+    line(categories, start_dates=starts, end_dates=ends, values=values)
+
+    # Plot Heatmap
+    heatmap(categories=categories, start_dates=starts, end_dates=ends,
+            values=values, mode='gantt')
+
+    # Plot Scatter plot
+    scatter(categories, start_dates=starts, end_dates=ends, values=values,
+            mode='gantt')

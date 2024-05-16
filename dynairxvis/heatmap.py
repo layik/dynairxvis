@@ -1,5 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from collections import defaultdict
+
 from .time import grouped_chart
 
 
@@ -13,9 +15,9 @@ def heatmap(categories, values=None, start_dates=None, end_dates=None,
     ----------
     categories : list of str
         The categories for the y-axis of the heatmap.
-    values : list of int or float, as flat or nested list (for 'value' mode).
+    values : list of int or float, as flat or nested list (for 'heatmap' mode).
         The values associated with each category.
-    start_dates, end_dates : list of datetime (for 'time' mode)
+    start_dates, end_dates : list of datetime (for 'gantt' mode)
         Start and end dates for each category interval.
     mode : str, optional
         'heatmap' for a standard value-based heatmap,
@@ -32,7 +34,7 @@ def heatmap(categories, values=None, start_dates=None, end_dates=None,
     --------
     >>> categories = ['Category 1', 'Category 2', 'Category 3']
     >>> values = [1, 2, 3]
-    >>> heatmap(categories, values=values, mode='value')
+    >>> heatmap(categories, values=values, mode='heatmap')
     >>> start_dates = [datetime(2020, 1, 1), datetime(2020, 6, 1),
         datetime(2020, 8, 1)]
     >>> end_dates = [datetime(2020, 3, 1), datetime(2020, 9, 1),
@@ -61,21 +63,26 @@ def heatmap(categories, values=None, start_dates=None, end_dates=None,
                 flattened_values.append(item)
         return flattened_values
 
-    # Determine if values are nested and find unique values
-    flattened_values = flatten(values)
-    unique_values = sorted(set(flattened_values))
-    heatmap_matrix = np.zeros((len(categories), len(unique_values)))
+    # Aggregate values by category
+    category_values = defaultdict(list)
+    for cat, val in zip(categories, values):
+        if isinstance(val, list):
+            category_values[cat].extend(val)
+        else:
+            category_values[cat].append(val)
+
+    unique_categories = sorted(category_values.keys())
+    unique_values = sorted(set(flatten(values)))
+    heatmap_matrix = np.zeros((len(unique_categories), len(unique_values)))
 
     # Fill the heatmap matrix
-    for i, item in enumerate(values):
-        if not isinstance(item, list):
-            item = [item]  # Treat single values as list
-        for value in item:
-            value_index = unique_values.index(value)
+    for i, cat in enumerate(unique_categories):
+        for val in category_values[cat]:
+            value_index = unique_values.index(val)
             heatmap_matrix[i, value_index] += 1  # Increment for occurrences
 
     # Set default figure properties
-    default_fig_kw = {'figsize': (5, len(categories))}
+    default_fig_kw = {'figsize': (5, len(unique_categories))}
     default_fig_kw.update(fig_kw)
     fig, ax = plt.subplots(**default_fig_kw)
 
@@ -84,15 +91,16 @@ def heatmap(categories, values=None, start_dates=None, end_dates=None,
 
     # Set ticks and labels
     ax.set_xticks(np.arange(len(unique_values)))
-    ax.set_xticklabels(unique_values)
-    ax.set_yticks(np.arange(len(categories)))
-    ax.set_yticklabels(categories)
+    ax.set_xticklabels(unique_values, rotation=45, ha='left')
+    ax.set_yticks(np.arange(len(unique_categories)))
+    ax.set_yticklabels(unique_categories)
 
     # Move x-ticks to the top if preferred
     if kwargs.get('xticks_top', False):
         ax.xaxis.set_ticks_position('top')
 
     # Set axis labels and title
+    ax.set_xlabel(kwargs.get('xlabel', 'Values'))
     ax.set_ylabel(kwargs.get('ylabel', 'Categories'))
     ax.set_title(kwargs.get('title', 'Heatmap'))
 
