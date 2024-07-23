@@ -186,7 +186,6 @@ def plot_charts(df, column_refs=[], **kwargs):
         scatter(df[n_col], values=df[q_col], mode='scatter')
         heatmap(df[n_col], values=df[q_col], mode='heatmap')
         pie(df[n_col], df[q_col])
-        # table(df[[n_col, q_col]], **kwargs)
     elif len(col_names) == 3 and col_codes == 'NTT':
         # NT
         print('NT charts...')
