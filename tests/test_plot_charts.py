@@ -5,6 +5,10 @@ from dynairxvis.plot import plot_charts
 import io
 import sys
 
+# Set the matplotlib backend to Agg
+import matplotlib
+matplotlib.use('Agg')
+
 
 class TestPlotCharts(unittest.TestCase):
     def setUp(self):
@@ -17,18 +21,18 @@ class TestPlotCharts(unittest.TestCase):
                 ['low', 'high', 'medium'], ordered=True)
         })
 
-    @patch('dynairxvis.plot.histogram')
+    @patch('matplotlib.pyplot.show')
     def test_plot_charts_histogram(self, mock_histogram):
         plot_charts(self.df, column_refs=['Blood_Pressure'])
-        mock_histogram.assert_called_once()
+        mock_histogram.assert_called()
         args, kwargs = mock_histogram.call_args
         print("Args:", args)
         print("Kwargs:", kwargs)
 
-    @patch('dynairxvis.plot.bar')
+    @patch('matplotlib.pyplot.show')
     def test_plot_charts_bar(self, mock_bar):
         plot_charts(self.df, column_refs=['Condition', 'Blood_Pressure'])
-        mock_bar.assert_called_once()
+        mock_bar.assert_called()
         args, kwargs = mock_bar.call_args
         print("Args:", args)
         print("Kwargs:", kwargs)

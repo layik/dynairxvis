@@ -35,7 +35,7 @@ jobs:
     - name: Run tests
       run: poetry run pytest -vv
 
-    - name: Run notebooks [Ubuntu only]
+    - name: Run notebooks [Ubuntu]
       if: runner.os == 'Linux'
       run: |
         pip install jupyterlab
@@ -43,7 +43,7 @@ jobs:
         cd notebooks
         jupyter nbconvert --execute --to notebook get_started.ipynb
 
-    - name: Build docs [Ubuntu only]
+    - name: Build docs [Ubuntu]
       if: runner.os == 'Linux'
       run: |
         cd docs
