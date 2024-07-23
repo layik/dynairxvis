@@ -1,16 +1,18 @@
 import os
 import matplotlib.pyplot as plt
-from .radar import radar
+
 from .dot import dot
 from .box import box
-from .hist import histogram
+from .bar import bar
+from .pie import pie, table_list
+from .time import line
 from .gantt import gantt
-from .time import line, grouped_chart
+# from .table import table
+from .radar import radar
+from .violin import violin
+from .hist import histogram
 from .scatter import scatter
 from .heatmap import heatmap
-from .bar import bar
-from .pie import pie
-from .violin import violin
 from .utils import profile, findIndex
 
 # For threshold of:  50.0 . These will be kept (10)
@@ -55,6 +57,7 @@ def _draw_fig(filename=None, overwrite=False, **kwargs):
 
 
 # Mapping of plot_name to plotting function
+# All 11 chart types added
 plot_functions = {
     'bar': bar,
     'box': box,
@@ -165,13 +168,16 @@ def plot_charts(df, column_refs=[], **kwargs):
     end = df[col_names[findIndex(a, 'end')]]
     # Decision structure for plotting based on type codes and number of columns
     if len(col_names) == 1 and col_codes == 'Q':
-        print(f"Plotting histogram for {col_names[0]}...")
+        print(f"Q charts for {col_names[0]}...")
         histogram(df[col_names[0]], **kwargs)
         violin(df[col_names[0]], **kwargs)
         box(df[col_names[0]], **kwargs)
     elif len(col_names) == 1 and col_codes == 'N':
-        print('Coming...')
+        print('N charts...')
+        pie(df[col_names[0]], **kwargs)
+        table_list(df[[col_names[0]]], **kwargs)
     elif (len(col_names) == 2 and col_codes == 'NQ'):
+        print('NQ charts...')
         q_col = next(col for col,
                      dtype in col_types.items() if dtype == 'Q')
         # print(f"Plotting bar chart with categories from {n_col} and" +
@@ -180,8 +186,10 @@ def plot_charts(df, column_refs=[], **kwargs):
         scatter(df[n_col], values=df[q_col], mode='scatter')
         heatmap(df[n_col], values=df[q_col], mode='heatmap')
         pie(df[n_col], df[q_col])
+        # table(df[[n_col, q_col]], **kwargs)
     elif len(col_names) == 3 and col_codes == 'NTT':
         # NT
+        print('NT charts...')
         gantt(df[n_col], start, end)
         pie(df[n_col], start_dates=start, end_dates=end, time=True)
         line(df[n_col], start_dates=start, end_dates=end)

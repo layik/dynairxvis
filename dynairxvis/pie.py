@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 from collections import defaultdict
 from .utils import is_valid_array
+import numpy as np
+import pandas as pd
 
 gray_color_palette = ['grey', 'none']
 
@@ -15,12 +17,12 @@ def pie(categories, values=None, time=False, start_dates=None,
     ----------
     categories : list of str
         The categories for each pie chart.
-    values : list of int or float
+    values : list of int or float, optional
         The values associated with each category.
     time : bool
         If True, uses start_dates and end_dates to create time-based
         pie charts.
-    start_dates, end_dates : list of datetime
+    start_dates, end_dates : list of datetime, optional
         Lists of start and end dates for each category if time=True.
     fig_kw : dict, optional
         Keyword arguments for plt.subplots() to customize the figure.
@@ -82,33 +84,61 @@ def _figure_and_axes(num_plots, fig_kw, **kwargs):
 
 
 def _pie(categories, values, fig_kw, **kwargs):
+    """
+    Creates and displays pie charts based on the provided categories
+    and values. If quantitative values are not provided, a single pie chart
+    with equal segments is displayed.
+
+    Parameters
+    ----------
+    categories : list of str
+        The categories for the pie charts.
+    values : list of int or float, optional
+        The values associated with each category. If not provided, equal
+        segments are created.
+    fig_kw : dict
+        Keyword arguments for plt.subplots() to customize the figure.
+    **kwargs : dict
+        Additional keyword arguments for customization such as 'startangle',
+        and 'colors'.
+    """
     if not is_valid_array(categories):
-        raise ValueError(
-            "categories must be a valid array."
-        )
-    if not is_valid_array(values):
-        raise ValueError(
-            "values must be a valid array."
-        )
-    if len(categories) != len(values):
-        raise ValueError(
-                "categories and values must have equal lengths."
-            )
+        raise ValueError("categories must be a valid array.")
 
-    num_pies = len(categories)
-    fig, axs = _figure_and_axes(num_pies, fig_kw)
+    # If values are not provided, create equal segments for a single pie chart
+    if values is None:
+        num_pies = 1
+        total = len(categories)
+        values_1pie = [1] * total
+    else:
+        if not is_valid_array(values):
+            raise ValueError("values must be a valid array.")
+        if len(categories) != len(values):
+            raise ValueError("categories and values must have equal lengths.")
+        num_pies = len(categories)
+        total = sum(values)
 
-    total = sum(values)
-
-    # Create a pie chart for each category
-    for ax, category, value in zip(axs, categories, values):
-        # Calculate pie segments
-        segment = [value / total, (total - value) / total]
-        # Plot pie chart
-        ax.pie(segment, labels=[f'{value}', ''], colors=gray_color_palette,
-               startangle=90, wedgeprops=dict(edgecolor='black'),
-               normalize=True, **kwargs)
-        ax.set_title(category)
+    if values is None:
+        # Plot a single pie chart with equal segments
+        fig, ax = plt.subplots()
+        colors = plt.cm.Greys(np.linspace(0.2, 0.8, total))
+        ax.pie(values_1pie, labels=categories if total < 10 else None,
+               colors=colors, startangle=90, autopct='%1.1f%%',
+               wedgeprops=dict(edgecolor='black'))
+        if total >= 10:
+            ax.legend(categories, loc="best", fontsize=8)
+        # ax.set_title('Pie Chart')
+    else:
+        fig, axs = _figure_and_axes(num_pies, fig_kw)
+        # Create a pie chart for each category
+        for ax, category, value in zip(axs, categories, values):
+            # Calculate pie segments
+            segment = [value / total, (total - value) / total]
+            # Plot pie chart
+            ax.pie(segment, labels=[f'{value}', ''], colors=gray_color_palette,
+                   startangle=90, wedgeprops=dict(edgecolor='black'),
+                   normalize=True, **kwargs)
+            ax.set_title(category)
 
     _show()
 
@@ -143,3 +173,39 @@ def _grouped_pie(categories, start_dates, end_dates, fig_kw={}, **kwargs):
         ax.set_title(category)
 
     _show()
+
+
+def table_list(data, **kwargs):
+    """
+    Print a DataFrame, list, or series as a list with the column name in
+    bold and underlined.
+
+    Parameters
+    ----------
+    data : pandas.DataFrame, list, or pandas.Series
+        The data to print.
+
+    **kwargs : dict
+        Additional keyword arguments for customization such as 'colormap',
+        'cellLoc', 'rowLabels', 'colLabels', 'loc', 'bbox', 'cellColours',
+        'cellLoc', 'rowColours', 'rowLoc', 'fontsize
+    """
+    if data is None:
+        raise ValueError("data cannot be None.")
+
+    # Convert list or series to DataFrame
+    if isinstance(data, (list, pd.Series)):
+        data = pd.DataFrame(data)
+
+    # ANSI escape code for bold and underline
+    BOLD_UNDERLINE = '\033[1m\033[4m'
+    END = '\033[0m'
+
+    # Print the column name in bold and underlined
+    print(f"{BOLD_UNDERLINE}{data.columns[0]}{END}")
+
+    # Print the DataFrame without the index, left-aligned
+    max_width = max(data[data.columns[0]].astype(str).map(len))
+    for index, row in data.iterrows():
+        value = row[data.columns[0]]
+        print(str(value).ljust(max_width, **kwargs))
