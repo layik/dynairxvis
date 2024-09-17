@@ -35,13 +35,16 @@ def box(values, horizontal=False, fig_kw={}, plot_kw={}, **kwargs):
     if horizontal:
         plt.boxplot(values, vert=False, medianprops=medianprops,
                     **plot_kw, **kwargs)
+        plt.xlabel(kwargs.get('ylabel', 'Values'))
+        plt.yticks([1], kwargs.get('xticks_labels', ['Value Set']))
+        plt.grid(True, which='both', axis='x', linestyle='--', linewidth=0.5)
     else:
         plt.boxplot(values, vert=True, medianprops=medianprops,
                     **plot_kw, **kwargs)
+        plt.ylabel(kwargs.get('ylabel', 'Values'))
+        plt.xticks([1], kwargs.get('xticks_labels', ['Value Set']))
+        plt.grid(True, which='both', axis='y', linestyle='--', linewidth=0.5)
 
     plt.title(kwargs.get('title', 'Box Plot of Values'))
-    plt.ylabel(kwargs.get('ylabel', 'Values'))
-    plt.xticks([1], kwargs.get('xticks_labels', ['Value Set']))
-    plt.grid(True, which='both', axis='y', linestyle='--', linewidth=0.5)
 
     plt.show()
