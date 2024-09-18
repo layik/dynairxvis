@@ -196,17 +196,17 @@ def plot_charts(df, column_refs=[], **kwargs):
         heatmap(df[n_col], start_dates=start, end_dates=end, mode='gantt')
     elif len(col_names) == 4 and col_codes == 'NOTT':
         print('NTO charts...')
-        nott_nqtt(df[n_col], start, end, df[o_col])
+        _nott_nqtt(df[n_col], start, end, df[o_col])
         # ['Gantt', 'Line', 'Heatmap', 'Scatter']
     elif len(col_names) == 4 and col_codes == 'NQTT':
         print('NQT charts...')
-        nott_nqtt(df[n_col], start, end, df[q_col])
+        _nott_nqtt(df[n_col], start, end, df[q_col])
         # ['Gantt', 'Line', 'Heatmap', 'Scatter']
     else:
         print("No suitable plot type found for the columns or data types.")
 
 
-def nott_nqtt(categories, starts, ends, values):
+def _nott_nqtt(categories, starts, ends, values):
     """
     Utility function to plot Gantt, Line, Heatmap, and Scatter plots.
 
@@ -236,7 +236,7 @@ def nott_nqtt(categories, starts, ends, values):
     >>> ends = [datetime(2021, 1, 1), datetime(2020, 7, 1),
         datetime(2020, 9, 1)]
     >>> values = [2, 4, 6]
-    >>> nott_nqtt(categories, starts, ends, values)
+    >>> _nott_nqtt(categories, starts, ends, values)
     """
     # Input validation
     if not (len(categories) == len(starts) == len(ends) == len(values)):
