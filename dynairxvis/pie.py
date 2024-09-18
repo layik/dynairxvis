@@ -66,11 +66,8 @@ def _figure_and_axes(num_plots, fig_kw, **kwargs):
     Returns:
     tuple: The figure and axes objects.
     """
-    # Dynamically adjust the figsize based on the number of plots
-    adjusted_figsize = (num_plots * 3, 3) if num_plots else (3, 3)
-
-    # Set default figure properties and update with any user provided values
-    default_fig_kw = {'figsize': adjusted_figsize}
+    # Set default figure properties
+    default_fig_kw = {'figsize': (num_plots * 3, 3) if num_plots else (3, 3)}
     default_fig_kw.update(fig_kw)
 
     # Create figure and axes
@@ -120,7 +117,7 @@ def _pie(categories, values, fig_kw, **kwargs):
 
     if values is None:
         # Plot a single pie chart with equal segments
-        fig, ax = plt.subplots()
+        fig, ax = plt.subplots(**fig_kw)
         colors = plt.cm.Greys(np.linspace(0.2, 0.8, total))
         ax.pie(values_1pie, labels=categories if total < 10 else None,
                colors=colors, startangle=90, autopct='%1.1f%%',
@@ -159,17 +156,22 @@ def _grouped_pie(categories, start_dates, end_dates, fig_kw={}, **kwargs):
 
     for ax, (category, intervals) in zip(axs, intervals_by_category.items()):
         wedges = []
+        labels = []
         for start, end in intervals:
             start_sec = (start - min_date).total_seconds()
             end_sec = (end - min_date).total_seconds()
             start_angle = (start_sec / total_duration) * 360
             extent = ((end_sec - start_sec) / total_duration) * 360
             wedges.append((start_angle, extent))
+            labels.append(f"{start.strftime('%Y-%m-%d')}\n{end.strftime('%Y-%m-%d')}")
         wedges.sort()
-        for start_angle, extent in wedges:
+        # Plot the pie chart with the start and end dates as labels
+        for i, (start_angle, extent) in enumerate(wedges):
             ax.pie([extent, 360 - extent], colors=gray_color_palette,
                    startangle=start_angle + 90, counterclock=False,
-                   wedgeprops={'edgecolor': 'black'})
+                   wedgeprops={'edgecolor': 'black'},
+                   labels=[labels[i], ''], labeldistance=0.8)
+
         ax.set_title(category)
 
     _show()
