@@ -141,6 +141,3 @@ def gantt(categories, start_dates, end_dates, values=None,
 
     plt.tight_layout()
     plt.show()
-
-    # Return figure and axes for further manipulation if needed
-    return fig, ax
