@@ -208,7 +208,10 @@ def plot_charts(df, column_refs=[], **kwargs):
 
 def _nott_nqtt(categories, starts, ends, values):
     """
-    Utility function to plot Gantt, Line, Heatmap, and Scatter plots.
+    Utility function to plot Gantt, Line, Heatmap, and Scatter plots for
+    combinations of categories, start dates, end dates, and values. This
+    can be combination of nominal, ordinal, two temporal columns of data or
+    nominal, quantitative, and two columns of temporal data.
 
     Parameters
     ----------
