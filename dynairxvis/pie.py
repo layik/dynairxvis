@@ -53,7 +53,6 @@ def pie(categories, values=None, time=False, start_dates=None,
 def _show():
     plt.tight_layout()
     plt.show()
-    plt.close('all')
 
 
 def _figure_and_axes(num_plots, fig_kw, **kwargs):
