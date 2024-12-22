@@ -25,8 +25,38 @@ def plot_grid(categories_list, start_dates_list, end_dates_list,
     **kwargs : dict
         Additional arguments passed to individual charts.
     """
-    n = len(chart_types)
+    # Determine the minimum length across lists
+    lengths = [len(categories_list), len(start_dates_list),
+               len(end_dates_list), len(chart_types)]
+    min_length = min(lengths)
+
+    # Handle the values_list if provided
+    if values_list:
+        lengths.append(len(values_list))
+        min_length = min(min_length, len(values_list))
+
+    # Early exit if there are no charts to plot
+    if min_length == 0 or len(chart_types) == 0:
+        print("**Warning:** Either a list is missing or empty. Or "
+              "no chart types provided. Nothing to plot.")
+        return
+
+    # Print warning if the lists have different lengths
+    if len(set(lengths)) > 1:
+        chart_word = "chart" if min_length == 1 else "charts"
+        print("**Warning:** Mismatch detected. "
+              f"Plotting first {min_length} {chart_word}.")
+
+    # Truncate all lists to the shortest length
+    categories_list = categories_list[:min_length]
+    start_dates_list = start_dates_list[:min_length]
+    end_dates_list = end_dates_list[:min_length]
+    chart_types = chart_types[:min_length]
+    if values_list:
+        values_list = values_list[:min_length]
+
     # Set default figure properties and apply scaling to height
+    n = len(chart_types)
     default_fig_kw = FIG_SIZE.copy()
     default_fig_kw['figsize'] = (FIG_SIZE['figsize'][0],
                                  FIG_SIZE['figsize'][1] * n)
@@ -47,6 +77,5 @@ def plot_grid(categories_list, start_dates_list, end_dates_list,
                       values=(values_list[i] if values_list else None),
                       ax=ax, fig_kw=fig_kw, **kwargs)
 
-    plt.suptitle(kwargs.get('suptitle', 'Grouped Chart Grid'))
-    plt.xlabel(kwargs.get('xlabel', 'Time'))
+    plt.suptitle(kwargs.get('suptitle', 'Chart Grid'))
     plt.show()
