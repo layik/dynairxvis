@@ -143,6 +143,10 @@ def grouped_chart(categories, start_dates, end_dates, chart_type='line',
     ax.set_title(kwargs.get('title', f'{chart_type.capitalize()} Chart'))
 
     if values is not None:
+        # Handle numeric and ordinal values
+        # Check if values are numeric; if not, try converting them
+        if isinstance(values, list):
+            values = pd.Series(values)
         if pd.api.types.is_numeric_dtype(values):
             # Create a colorbar if values are used for coloring
             sm = plt.cm.ScalarMappable(
@@ -151,7 +155,7 @@ def grouped_chart(categories, start_dates, end_dates, chart_type='line',
             sm._A = []  # Fake up the array of the scalar mappable.
             cbar = plt.colorbar(sm, ax=ax)
             cbar.set_label('Value Scale')
-        elif pd.api.types.is_categorical_dtype(values):
+        elif isinstance(values.dtype, pd.CategoricalDtype):
             # Generate a legend based on the unique "values"
             unique_values = pd.Categorical(values).categories
             value_to_category_map = {
@@ -196,7 +200,7 @@ def _get_cat_cols(categories, values, kwargs):
                 else:
                     normalized_values = (values - values.min()) / (
                         values.max() - values.min())
-            elif pd.api.types.is_categorical_dtype(values):
+            elif isinstance(values.dtype, pd.CategoricalDtype):
                 # Attempt to convert to ordered categorical if it's not numeric
                 try:
                     values = pd.Categorical(values, ordered=True)

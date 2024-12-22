@@ -163,7 +163,8 @@ def _grouped_pie(categories, start_dates, end_dates, fig_kw={}, **kwargs):
             start_angle = (start_sec / total_duration) * 360
             extent = ((end_sec - start_sec) / total_duration) * 360
             wedges.append((start_angle, extent))
-            labels.append(f"{start.strftime('%Y-%m-%d')}\n{end.strftime('%Y-%m-%d')}")
+            labels.append(f"{start.strftime('%Y-%m-%d')}\n"
+                          "{end.strftime('%Y-%m-%d')}")
         wedges.sort()
         # Plot the pie chart with the start and end dates as labels
         for i, (start_angle, extent) in enumerate(wedges):

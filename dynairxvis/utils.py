@@ -42,8 +42,8 @@ def profile(df, col_count=3):
     """
     Determines appropriate chart types based on the DataFrame's
     column data types and count. This function infers data types for the first
-    few columns of the DataFrame and suggests suitable chart types based on these
-    types.
+    few columns of the DataFrame and suggests suitable chart types based on
+    these types.
 
     Parameters:
     ----------
