@@ -7,7 +7,8 @@ from .utils import FIG_SIZE
 
 
 def grouped_chart(categories, start_dates, end_dates, chart_type='line',
-                  values=None, markers=None, fig_kw={}, plot_kw={}, **kwargs):
+                  values=None, markers=None, ax=None, fig_kw={},
+                  plot_kw={}, **kwargs):
     """
     Creates and displays a grouped chart (line, scatter, or Gantt)
     based on the provided data.
@@ -15,7 +16,7 @@ def grouped_chart(categories, start_dates, end_dates, chart_type='line',
     Parameters
     ----------
     categories : list of str
-        Categories or names of the tasks.
+        Categories or names.
     start_dates : list of datetime
         Start dates for each task.
     end_dates : list of datetime
@@ -30,6 +31,9 @@ def grouped_chart(categories, start_dates, end_dates, chart_type='line',
         Dictionary mapping categories to custom marker styles
         (for scatter plots).
         Default is None, which uses a predefined cycle of markers.
+    ax : matplotlib.axes.Axes, optional. If provided, the `ax` object
+        will be used to create the chart. Otherwise, a new figure and
+        axes will be created.
     fig_kw : dict, optional
         Keyword arguments for plt.subplots() to customize the figure.
     plot_kw : dict, optional
@@ -59,7 +63,8 @@ def grouped_chart(categories, start_dates, end_dates, chart_type='line',
     # Set default figure properties
     default_fig_kw = FIG_SIZE
     default_fig_kw.update(fig_kw)
-    fig, ax = plt.subplots(**default_fig_kw)
+    if ax is None:
+        fig, ax = plt.subplots(**default_fig_kw)
 
     unique_cats = sorted(set(categories), key=categories.index)
     category_colors = _get_cat_cols(categories, values, kwargs)
@@ -130,11 +135,12 @@ def grouped_chart(categories, start_dates, end_dates, chart_type='line',
         _plot_heatmap()
 
     # Common plot settings
-    plt.yticks(range(1, len(unique_cats) + 1), unique_cats)
+    ax.set_yticks(range(1, len(unique_cats) + 1))
+    ax.set_yticklabels(unique_cats)
     ax.xaxis_date()
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y'))
-    plt.xlabel(kwargs.get('xlabel', 'Date'))
-    plt.title(kwargs.get('title', f'{chart_type.capitalize()} Chart'))
+    ax.set_xlabel(kwargs.get('xlabel', 'Date'))
+    ax.set_title(kwargs.get('title', f'{chart_type.capitalize()} Chart'))
 
     if values is not None:
         if pd.api.types.is_numeric_dtype(values):
@@ -156,21 +162,24 @@ def grouped_chart(categories, start_dates, end_dates, chart_type='line',
                            color=category_colors[value_to_category_map[val]],
                            lw=4) for val in unique_values]
 
-            # Convert unique_values to a list to avoid issues with pandas Index
+            # Convert unique_values to a list
             unique_values_list = unique_values.tolist()
             ax.legend(handles=handles, labels=unique_values_list,
                       title="Values", loc="best")
     elif kwargs.get('legend', False) and chart_type != 'heatmap':
         # Standard category legend
         ax.legend(title="Categories", loc="best")
-    plt.tight_layout()
-    plt.show()
+    if ax is None:
+        plt.tight_layout()
+        plt.show()
+        plt.close('all')
 
 
 def _get_cat_cols(categories, values, kwargs):
     unique_cats = sorted(set(categories), key=categories.index)
     # Color and marker setup
-    gray_color_palette = plt.cm.Greys(np.linspace(0.2, 0.8, len(unique_cats)))
+    # gray_color_palette = plt.cm.Greys(
+    #     np.linspace(0.2, 0.8, len(unique_cats)))
     # gray_color_palette = 'black'
     # Check for user-provided category colors in kwargs
     category_colors = kwargs.get('category_colors')

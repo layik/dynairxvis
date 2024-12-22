@@ -31,7 +31,7 @@ def gantt(categories, start_dates, end_dates, values=None,
     plot_kw : dict
         Keyword arguments for ax.barh() to further customize the bars.
     **kwargs : dict
-        Additional keyword arguments for customization not related to ax.barh().
+        Additional keyword arguments for customization not related to ax.barh()
         This includes 'xlabel', 'title', and any axis formatter settings.
 
     Example
@@ -127,7 +127,8 @@ def gantt(categories, start_dates, end_dates, values=None,
         if use_values_as_height:
             height_values = [height for height in sorted(set(values))]
             height_labels = [f'{v:.2f}' for v in height_values]
-            # Create custom legend elements with varying linewidths to represent heights
+            # Create custom legend elements with varying linewidths to
+            # represent heights
             legend_handles = [
                 plt.Line2D([0], [0], color=SINGLE_COLOR,
                            lw=height_scaling(val) * 20, label=label)
