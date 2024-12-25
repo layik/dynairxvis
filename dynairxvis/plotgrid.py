@@ -125,7 +125,6 @@ def plot_grid(categories_list, start_dates_list, end_dates_list,
 
         # Add label if provided
         if titles_list:
-            print(titles_list[i])
             ax.set_title(titles_list[i])
 
         # Same x-axis labels for all charts, so just add it
@@ -139,5 +138,5 @@ def plot_grid(categories_list, start_dates_list, end_dates_list,
         # add a vertical line to indicate the current date
         _plot_now_line(ax, label='Now' if i == 0 else None)
 
-    plt.suptitle(kwargs.get('suptitle', 'Chart Grid'))
+    plt.suptitle(kwargs.get('suptitle', 'Plot Grid'))
     plt.show()

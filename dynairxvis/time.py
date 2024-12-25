@@ -88,8 +88,12 @@ def grouped_chart(categories, start_dates, end_dates, chart_type='line',
     #                                  unique_cats, gray_color_palette)})
     default_markers = ['o', '^', 's', '*', '+', 'x', 'D', 'h']
     marker_cycle = itertools.cycle(default_markers)
-    category_markers = markers or {
-        cat: next(marker_cycle) for cat in unique_cats}
+    if chart_type == 'line' and markers is None:
+        # use the same marker for all categories
+        category_markers = {cat: 'o' for cat in unique_cats}
+    else:
+        category_markers = markers or {
+            cat: next(marker_cycle) for cat in unique_cats}
 
     # To keep track of which categories have been plotted
     plotted_cats = set()

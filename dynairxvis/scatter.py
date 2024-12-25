@@ -70,7 +70,8 @@ def scatter(categories, start_dates=None, end_dates=None, values=None,
         for i, value in enumerate(values):
             ax.scatter(x_indices[i], value,
                        **plot_kw, color=color_theme[i],
-                       marker=markers.get(categories[i], 'o') if markers else 'o')
+                       marker=markers.get(
+                           categories[i], 'o') if markers else 'o')
     elif mode == 'bar':
         if orientation == 'horizontal':
             ax.barh(x_indices, values, color=color_theme, **plot_kw)
