@@ -17,7 +17,7 @@ def plot_grid(categories_list, start_dates_list, end_dates_list,
     end_dates_list : list of list
         List of end dates arrays.
     chart_types : list of str
-        List of chart types ('line', 'scatter', 'gantt').
+        List of chart types ('line', 'scatter', 'heatmap').
     values_list : list of arrays, optional
         List of value arrays for coloring.
     fig_kw : dict, optional
@@ -25,6 +25,14 @@ def plot_grid(categories_list, start_dates_list, end_dates_list,
     **kwargs : dict
         Additional arguments passed to individual charts.
     """
+    # TODO: input validation
+    # validate chart types, for now just line, scatter and heatmap
+    for chart_type in chart_types:
+        if chart_type not in ['line', 'scatter', 'heatmap']:
+            print(f"Error: Invalid chart type '{chart_type}'. "
+                  "Choose from 'line', 'scatter', or 'heatmap'.")
+            return
+
     # Determine the minimum length across lists
     lengths = [len(categories_list), len(start_dates_list),
                len(end_dates_list), len(chart_types)]

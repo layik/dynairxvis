@@ -56,7 +56,13 @@ def grouped_chart(categories, start_dates, end_dates, chart_type='line',
     >>> grouped_chart(categories, start_dates, end_dates, chart_type='scatter',
         markers=markers)
     """
-    # TODO: input validations
+    # validate chart type
+    if chart_type not in ['line', 'scatter', 'heatmap']:
+        print(f"Error: Invalid chart type '{chart_type}'. "
+              "Choose from 'line', 'scatter', or 'heatmap'.")
+        return
+    # TODO: other input validations
+
     if isinstance(categories, pd.Series):
         categories = categories.tolist()
 
