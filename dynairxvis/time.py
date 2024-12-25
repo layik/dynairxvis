@@ -92,8 +92,8 @@ def grouped_chart(categories, start_dates, end_dates, chart_type='line',
         # use the same marker for all categories
         category_markers = {cat: 'o' for cat in unique_cats}
     else:
-        category_markers = markers or {
-            cat: next(marker_cycle) for cat in unique_cats}
+        category_markers = {cat: marker for cat,
+                            marker in zip(categories, marker_cycle)}
 
     # To keep track of which categories have been plotted
     plotted_cats = set()
