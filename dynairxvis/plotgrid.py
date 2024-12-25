@@ -6,7 +6,8 @@ from .utils import _plot_now_line
 
 
 def plot_grid(categories_list, start_dates_list, end_dates_list,
-              chart_types, values_list=None, fig_kw={}, **kwargs):
+              chart_types, values_list=None,
+              titles_list=None, fig_kw={}, **kwargs):
     """
     Plot multiple chart types in a grid layout with shared x-axis. The function
     supports 'line', 'scatter', 'heatmap', and 'gantt' chart types. The
@@ -25,6 +26,8 @@ def plot_grid(categories_list, start_dates_list, end_dates_list,
         List of chart types ('line', 'scatter', 'heatmap', 'gantt').
     values_list : list of arrays, optional
         List of value arrays for coloring.
+    titles_list : list of str, optional
+        List of titles for each chart.
     fig_kw : dict, optional
         Figure customization arguments.
     **kwargs : dict
@@ -43,6 +46,7 @@ def plot_grid(categories_list, start_dates_list, end_dates_list,
                             datetime(2020, 4, 1)]]
     >>> chart_types = ['line', 'scatter']
     >>> values_list = [[1, 2, 3], [4, 5, 6]]
+    >>> titles_list = ['Chart 1', 'Chart 2']
     >>> plot_grid(categories_list, start_dates_list, end_dates_list,
                   chart_types, values_list=values_list)
     """
@@ -63,6 +67,11 @@ def plot_grid(categories_list, start_dates_list, end_dates_list,
         lengths.append(len(values_list))
         min_length = min(min_length, len(values_list))
 
+    # Handle the titles_list if provided
+    if titles_list:
+        lengths.append(len(titles_list))
+        min_length = min(min_length, len(titles_list))
+
     # Early exit if no charts to plot
     if min_length == 0 or len(chart_types) == 0:
         print("**Warning:** Either a list is missing or empty. Or "
@@ -82,6 +91,8 @@ def plot_grid(categories_list, start_dates_list, end_dates_list,
     chart_types = chart_types[:min_length]
     if values_list:
         values_list = values_list[:min_length]
+    if titles_list:
+        titles_list = titles_list[:min_length]
 
     # Set default figure properties and apply scaling to height
     n = len(chart_types)
@@ -101,6 +112,7 @@ def plot_grid(categories_list, start_dates_list, end_dates_list,
             categories_list, start_dates_list, end_dates_list, chart_types)):
 
         ax = axs[i]
+
         if chart_type.lower() == 'gantt':
             gantt(categories, start_dates, end_dates,
                   values=(values_list[i] if values_list else None),
@@ -110,7 +122,20 @@ def plot_grid(categories_list, start_dates_list, end_dates_list,
                           chart_type=chart_type,
                           values=(values_list[i] if values_list else None),
                           ax=ax, fig_kw=fig_kw, **kwargs)
-        # if now is within 1 yaer from the max x-axis limit
+
+        # Add label if provided
+        if titles_list:
+            print(titles_list[i])
+            ax.set_title(titles_list[i])
+
+        # Same x-axis labels for all charts, so just add it
+        # once to the bottom chart
+        if i == n - 1:
+            ax.set_xlabel(kwargs.get('xlabel', 'Date'))
+        else:
+            ax.set_xlabel('')
+
+        # if now is within 1 year from the max x-axis limit
         # add a vertical line to indicate the current date
         _plot_now_line(ax, label='Now' if i == 0 else None)
 

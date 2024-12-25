@@ -67,8 +67,8 @@ def grouped_chart(categories, start_dates, end_dates, chart_type='line',
                           ('end_dates', end_dates),
                           ('values', values),
                           ('markers', markers)]:
-        if var is not None and not isinstance(var, list):
-            print(f"Error: '{var_name}' must be a list.")
+        if var is not None and not isinstance(var, (list, pd.Series)):
+            print(f"Error: '{var_name}' must be a list or a Pandas Series.")
             return
 
     if isinstance(categories, pd.Series):
