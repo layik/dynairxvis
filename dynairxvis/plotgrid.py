@@ -2,12 +2,16 @@ import matplotlib.pyplot as plt
 from .time import grouped_chart
 from .utils import FIG_SIZE
 from .gantt import gantt
+from .utils import _plot_now_line
 
 
 def plot_grid(categories_list, start_dates_list, end_dates_list,
               chart_types, values_list=None, fig_kw={}, **kwargs):
     """
-    Plot multiple chart types in a grid layout with shared x-axis.
+    Plot multiple chart types in a grid layout with shared x-axis. The function
+    supports 'line', 'scatter', 'heatmap', and 'gantt' chart types. The
+    function will plot the first n charts where n is the minimum length of the
+    input lists. If the lists have different lengths, it will print a warning.
 
     Parameters
     ----------
@@ -25,9 +29,24 @@ def plot_grid(categories_list, start_dates_list, end_dates_list,
         Figure customization arguments.
     **kwargs : dict
         Additional arguments passed to individual charts.
+
+    Examples
+    --------
+    >>> categories_list = [['A', 'B', 'C'], ['X', 'Y', 'Z']]
+    >>> start_dates_list = [[datetime(2020, 1, 1), datetime(2020, 2, 1),
+                             datetime(2020, 3, 1)],
+                            [datetime(2020, 1, 1), datetime(2020, 2, 1),
+                             datetime(2020, 3, 1)]]
+    >>> end_dates_list = [[datetime(2020, 2, 1), datetime(2020, 3, 1),
+                            datetime(2020, 4, 1)],
+                            [datetime(2020, 2, 1), datetime(2020, 3, 1),
+                            datetime(2020, 4, 1)]]
+    >>> chart_types = ['line', 'scatter']
+    >>> values_list = [[1, 2, 3], [4, 5, 6]]
+    >>> plot_grid(categories_list, start_dates_list, end_dates_list,
+                  chart_types, values_list=values_list)
     """
-    # TODO: input validation
-    # validate chart types, for now just line, scatter and heatmap
+    # Validate chart types
     for chart_type in chart_types:
         if chart_type.lower() not in ['line', 'scatter', 'heatmap', 'gantt']:
             print(f"Error: Invalid chart type '{chart_type}'. "
@@ -44,7 +63,7 @@ def plot_grid(categories_list, start_dates_list, end_dates_list,
         lengths.append(len(values_list))
         min_length = min(min_length, len(values_list))
 
-    # Early exit if there are no charts to plot
+    # Early exit if no charts to plot
     if min_length == 0 or len(chart_types) == 0:
         print("**Warning:** Either a list is missing or empty. Or "
               "no chart types provided. Nothing to plot.")
@@ -56,7 +75,7 @@ def plot_grid(categories_list, start_dates_list, end_dates_list,
         print("**Warning:** Mismatch detected. "
               f"Plotting first {min_length} {chart_word}.")
 
-    # Truncate all lists to the shortest length
+    # Truncate lists to the shortest length
     categories_list = categories_list[:min_length]
     start_dates_list = start_dates_list[:min_length]
     end_dates_list = end_dates_list[:min_length]
@@ -77,6 +96,7 @@ def plot_grid(categories_list, start_dates_list, end_dates_list,
     if n == 1:
         axs = [axs]  # Handle single plot case
 
+    # Plot charts
     for i, (categories, start_dates, end_dates, chart_type) in enumerate(zip(
             categories_list, start_dates_list, end_dates_list, chart_types)):
 
@@ -90,6 +110,9 @@ def plot_grid(categories_list, start_dates_list, end_dates_list,
                           chart_type=chart_type,
                           values=(values_list[i] if values_list else None),
                           ax=ax, fig_kw=fig_kw, **kwargs)
+        # if now is within 1 yaer from the max x-axis limit
+        # add a vertical line to indicate the current date
+        _plot_now_line(ax, label='Now' if i == 0 else None)
 
     plt.suptitle(kwargs.get('suptitle', 'Chart Grid'))
     plt.show()

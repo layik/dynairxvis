@@ -62,6 +62,14 @@ def grouped_chart(categories, start_dates, end_dates, chart_type='line',
               "Choose from 'line', 'scatter', or 'heatmap'.")
         return
     # TODO: other input validations
+    for var_name, var in [('categories', categories),
+                          ('start_dates', start_dates),
+                          ('end_dates', end_dates),
+                          ('values', values),
+                          ('markers', markers)]:
+        if var is not None and not isinstance(var, list):
+            print(f"Error: '{var_name}' must be a list.")
+            return
 
     if isinstance(categories, pd.Series):
         categories = categories.tolist()

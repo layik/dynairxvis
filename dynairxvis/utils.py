@@ -1,6 +1,10 @@
 import pandas as pd
 import numpy as np
 import matplotlib.cm as cm
+import matplotlib.dates as mdates
+from datetime import datetime
+import matplotlib.pyplot as plt
+
 
 FIG_SIZE = {'figsize': (6, 4)}
 NOQT = ['Gantt', 'Line', 'Heatmap', 'Scatter']
@@ -109,3 +113,44 @@ def get_color_palette(n_colors):
     Generate a grayscale color palette with n distinct colors.
     """
     return [cm.Greys(i / n_colors) for i in range(n_colors)]
+
+
+def _plot_now_line(ax, max_date=None, label='Now'):
+    """
+    Plot a vertical line at the current datetime if within 1 year from the max
+    x-axis limit.
+
+    Parameters
+    ----------
+    ax : matplotlib.axes.Axes
+        The axis to plot the "now" line on.
+    max_date : datetime, optional
+        The maximum date to consider for plotting the "now" line.
+        If not provided, it will be inferred from the axis limits.
+    label : str, optional default 'Now'
+    """
+    if not isinstance(ax, plt.Axes):
+        raise TypeError("ax must be a matplotlib.axes.Axes instance")
+
+    now = datetime.now()
+
+    if max_date is None:
+        xlims = ax.get_xlim()
+        max_date = mdates.num2date(xlims[1])
+    elif not isinstance(max_date, datetime):
+        raise TypeError("max_date must be a datetime instance")
+
+    # Make 'now' timezone-aware to match 'max_date'
+    if (max_date.tzinfo is not None and
+            max_date.tzinfo.utcoffset(max_date) is not None):
+        now = now.astimezone(max_date.tzinfo)
+    # TODO: in future make the year scale of the x-axis a package wide setting
+    # then the following code can be amended to use that setting
+    # Plot "now" vertical line if within 1 year from max xlim
+    if (max_date - now).days <= 365:
+        ax.axvline(mdates.date2num(now), color='red', linestyle='--',
+                   linewidth=1)
+        ax.annotate(label, (mdates.date2num(now), ax.get_ylim()[1] * 0.95),
+                    xytext=(10, 0), textcoords='offset points', color='red')
+    if not isinstance(ax, plt.Axes):
+        raise TypeError("ax must be a matplotlib.axes.Axes instance")
