@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 from .time import grouped_chart
 from .utils import FIG_SIZE
+from .gantt import gantt
 
 
 def plot_grid(categories_list, start_dates_list, end_dates_list,
@@ -17,7 +18,7 @@ def plot_grid(categories_list, start_dates_list, end_dates_list,
     end_dates_list : list of list
         List of end dates arrays.
     chart_types : list of str
-        List of chart types ('line', 'scatter', 'heatmap').
+        List of chart types ('line', 'scatter', 'heatmap', 'gantt').
     values_list : list of arrays, optional
         List of value arrays for coloring.
     fig_kw : dict, optional
@@ -28,9 +29,9 @@ def plot_grid(categories_list, start_dates_list, end_dates_list,
     # TODO: input validation
     # validate chart types, for now just line, scatter and heatmap
     for chart_type in chart_types:
-        if chart_type not in ['line', 'scatter', 'heatmap']:
+        if chart_type.lower() not in ['line', 'scatter', 'heatmap', 'gantt']:
             print(f"Error: Invalid chart type '{chart_type}'. "
-                  "Choose from 'line', 'scatter', or 'heatmap'.")
+                  "Choose from 'line', 'scatter', 'heatmap' or 'gantt'.")
             return
 
     # Determine the minimum length across lists
@@ -80,10 +81,15 @@ def plot_grid(categories_list, start_dates_list, end_dates_list,
             categories_list, start_dates_list, end_dates_list, chart_types)):
 
         ax = axs[i]
-        grouped_chart(categories, start_dates, end_dates,
-                      chart_type=chart_type,
-                      values=(values_list[i] if values_list else None),
-                      ax=ax, fig_kw=fig_kw, **kwargs)
+        if chart_type.lower() == 'gantt':
+            gantt(categories, start_dates, end_dates,
+                  values=(values_list[i] if values_list else None),
+                  ax=ax, fig_kw=fig_kw, **kwargs)
+        else:
+            grouped_chart(categories, start_dates, end_dates,
+                          chart_type=chart_type,
+                          values=(values_list[i] if values_list else None),
+                          ax=ax, fig_kw=fig_kw, **kwargs)
 
     plt.suptitle(kwargs.get('suptitle', 'Chart Grid'))
     plt.show()

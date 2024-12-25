@@ -6,7 +6,7 @@ from .time import grouped_chart
 
 
 def heatmap(categories, values=None, start_dates=None, end_dates=None,
-            mode='heatmap', fig_kw={}, cmap='Greys', **kwargs):
+            ax=None, mode='heatmap', fig_kw={}, cmap='Greys', **kwargs):
     """
     Creates and displays a heatmap for given categories
     and associated values or time intervals.
@@ -22,6 +22,8 @@ def heatmap(categories, values=None, start_dates=None, end_dates=None,
     mode : str, optional
         'heatmap' for a standard value-based heatmap,
         'gantt' for a time-interval based heatmap.
+    ax : matplotlib.axes.Axes, optional
+        Axes object to plot on. If None, creates a new figure and axis.
     fig_kw : dict, optional
         Keyword arguments for plt.subplots() to customize the figure.
     cmap : str or Colormap, optional
@@ -84,7 +86,9 @@ def heatmap(categories, values=None, start_dates=None, end_dates=None,
     # Set default figure properties
     default_fig_kw = {'figsize': (5, len(unique_categories))}
     default_fig_kw.update(fig_kw)
-    fig, ax = plt.subplots(**default_fig_kw)
+    # Use existing ax or create new figure and axis
+    if ax is None:
+        fig, ax = plt.subplots(**default_fig_kw)
 
     # Create the heatmap
     cax = ax.matshow(heatmap_matrix, cmap=cmap, aspect='auto')
@@ -109,5 +113,6 @@ def heatmap(categories, values=None, start_dates=None, end_dates=None,
         fig.colorbar(cax, ax=ax, orientation='vertical')
 
     # Additional plot adjustments
-    plt.tight_layout()
-    plt.show()
+    if ax is None:
+        plt.tight_layout()
+        plt.show()

@@ -7,7 +7,8 @@ from .utils import FIG_SIZE, get_color_palette
 
 
 def gantt(categories, start_dates, end_dates, values=None,
-          use_values_as_height=False, fig_kw={}, plot_kw={}, **kwargs):
+          use_values_as_height=False, ax=None,
+          fig_kw={}, plot_kw={}, **kwargs):
     """
     Creates and displays a Gantt chart based on the provided categories
     and date ranges.
@@ -26,6 +27,8 @@ def gantt(categories, start_dates, end_dates, values=None,
     use_values_as_height : bool, optional
         Whether to use the values to adjust the bar height. Default is False,
         which uses values as hue for coloring.
+    ax : matplotlib.axes.Axes, optional
+        Axes object to plot on. If None, creates a new figure and axis.
     fig_kw : dict
         Keyword arguments for plt.subplots() to customize the figure.
     plot_kw : dict
@@ -44,7 +47,9 @@ def gantt(categories, start_dates, end_dates, values=None,
     # Set up default figure settings
     default_fig_kw = FIG_SIZE
     default_fig_kw.update(fig_kw)
-    fig, ax = plt.subplots(**default_fig_kw)
+    # Use existing ax or create new figure and axis
+    if ax is None:
+        fig, ax = plt.subplots(**default_fig_kw)
     SINGLE_COLOR = 'gray'
 
     # If values is not provided, generate a color map based on the unique
@@ -140,5 +145,7 @@ def gantt(categories, start_dates, end_dates, values=None,
         else:
             plt.legend(handles=list(legend_patches.values()), title='Values')
 
-    plt.tight_layout()
-    plt.show()
+    # If no ax provided, show the plot
+    if ax is None:
+        plt.tight_layout()
+        plt.show()
