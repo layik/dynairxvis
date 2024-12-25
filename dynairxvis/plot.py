@@ -114,7 +114,8 @@ def plot_charts(df, column_refs=[], **kwargs):
     Plots charts based on the provided column references (names or indices)
     and their data types.
 
-    Parameters:
+    Parameters
+    ----------
     df : pandas.DataFrame
         The DataFrame from which to plot data.
     column_refs : list
@@ -122,26 +123,30 @@ def plot_charts(df, column_refs=[], **kwargs):
     **kwargs : dict
         Additional keyword arguments passed to plotting functions.
 
-    Returns:
-    None.
+    Returns
+    -------
+    None
 
-    Examples:
-    ---------
-    import pandas as pd
-    from your_module_name import plot_charts
+    Examples
+    --------
 
-    # Sample DataFrame
-    df = pd.DataFrame({
-        'Blood_Pressure': [120, 130, 125, 118, 135],
-        'Condition': ['Diabetes', 'Hypertension', 'Asthma', 'Cardiovascular',
-                      'Obesity']
-    })
+    .. code-block:: python
 
-    # Histogram of 'Blood_Pressure'
-    plot_charts(df, column_refs=['Blood_Pressure'])
+        import pandas as pd
+        from your_module_name import plot_charts
 
-    # Bar chart with 'Condition' as categories & 'Blood_Pressure' as values
-    plot_charts(df, column_refs=['Condition', 'Blood_Pressure'])
+        # Sample DataFrame
+        df = pd.DataFrame({
+            'Blood_Pressure': [120, 130, 125, 118, 135],
+            'Condition': ['Diabetes', 'Hypertension', 'Asthma',
+                          'Cardiovascular', 'Obesity']
+        })
+
+        # Histogram of 'Blood_Pressure'
+        plot_charts(df, column_refs=['Blood_Pressure'])
+
+        # Bar chart with 'Condition' as categories & 'Blood_Pressure' as values
+        plot_charts(df, column_refs=['Condition', 'Blood_Pressure'])
 
     """
     # Convert indices to column names if necessary

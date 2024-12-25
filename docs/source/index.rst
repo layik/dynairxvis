@@ -5,15 +5,16 @@
 
 Welcome to dynairxvis's documentation!
 ======================================
+.. include:: ../../README.md
+   :parser: myst_parser.sphinx_
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
    plot
-
-.. include:: ../../README.md
-   :parser: myst_parser.sphinx_
+   plotgrid
+   get_started
 
 Indices and tables
 ==================
