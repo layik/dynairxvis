@@ -48,7 +48,7 @@ the height of the Gantt bars.
 plot_charts(df, column_refs=['Start_Date', 'End_Date', 'Pain_Scale', 'Condition'], values=df['Blood_Pressure'],
 use_values_as_height=True)
 ```
-![image](https://github.com/user-attachments/assets/8a1f5653-5f6b-4eb6-b411-2d17d2354585)
+![image](https://github.com/user-attachments/assets/18e95c20-b04a-41ad-b6de-77b1fb44478b)
 
 See more details of this in the 'getting_started.ipynb' notebook.
 
