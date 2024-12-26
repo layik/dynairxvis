@@ -40,7 +40,7 @@ plot_charts(df, column_refs=['Start_Date', 'End_Date', 'Pain_Scale', 'Condition'
 ```
 The `plot_charts` function will plot the charts for the given data. It does so by checking the data types of the columns and then plotting the appropriate charts. One of the charts will be this:
 
-![image](https://github.com/user-attachments/assets/e518bdc9-6889-4b15-8dbc-eeba194a682a)
+![image](https://github.com/user-attachments/assets/6f6e43c2-df39-4c1e-8738-f98a5e7e94b0)
 
 Another example is when looking at NQT and we use the Q column as the value to change
 the height of the Gantt bars.
