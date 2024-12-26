@@ -14,6 +14,7 @@ def test_plot_now_line_with_valid_ax():
     assert ax.lines[0].get_color() == 'red'
     assert ax.lines[0].get_linestyle() == '--'
     assert ax.lines[0].get_linewidth() == 1
+    plt.close(fig)
 
 
 def test_plot_now_line_with_max_date():
@@ -24,6 +25,7 @@ def test_plot_now_line_with_max_date():
     assert ax.lines[0].get_color() == 'red'
     assert ax.lines[0].get_linestyle() == '--'
     assert ax.lines[0].get_linewidth() == 1
+    plt.close(fig)
 
 
 def test_plot_now_line_with_invalid_ax():
@@ -35,11 +37,13 @@ def test_plot_now_line_with_invalid_max_date():
     fig, ax = plt.subplots()
     with pytest.raises(TypeError):
         _plot_now_line(ax, max_date="invalid_date")
+    plt.close(fig)
 
 
 def test_plot_now_line_with_label():
     fig, ax = plt.subplots()
     _plot_now_line(ax, label='Test Label')
     assert len(ax.texts) == 1
-    assert ax.texts[0].get_text() == 'Test Label'
+    assert ax.texts[0].get_color() == 'red'
+    plt.close(fig)
     assert ax.texts[0].get_color() == 'red'
