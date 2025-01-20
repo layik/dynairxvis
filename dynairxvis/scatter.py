@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from .time import grouped_chart
-from .utils import FIG_SIZE
+from .utils import FIG_SIZE, _resolve_orientation
 
 
 def scatter(categories, start_dates=None, end_dates=None, values=None,
@@ -57,6 +57,8 @@ def scatter(categories, start_dates=None, end_dates=None, values=None,
     if values is None:
         raise ValueError(
             "Values must be provided for 'scatter' and 'bar' modes.")
+
+    orientation = _resolve_orientation(orientation)
 
     fig_defaults = FIG_SIZE
     fig_defaults.update(fig_kw)

@@ -156,7 +156,7 @@ def _plot_now_line(ax, max_date=None, label='Now'):
         raise TypeError("ax must be a matplotlib.axes.Axes instance")
 
 
-def resolve_orientation(orientation):
+def _resolve_orientation(orientation):
     """
     Resolves orientation strings flexibly based on substrings.
 

@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from .utils import FIG_SIZE, resolve_orientation
+from .utils import FIG_SIZE, _resolve_orientation
 
 
 def histogram(values, bins=None, orientation='vertical',
@@ -30,7 +30,7 @@ def histogram(values, bins=None, orientation='vertical',
               xlabel='Frequency', ylabel='Value')
     """
     # resolve orientation
-    orientation = resolve_orientation(orientation)
+    orientation = _resolve_orientation(orientation)
 
     # Setup default figure size
     default_fig_kw = FIG_SIZE.copy()  # Ensure FIG_SIZE remains unchanged

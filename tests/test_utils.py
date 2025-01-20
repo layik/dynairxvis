@@ -1,6 +1,6 @@
 import pytest
 from datetime import datetime, timedelta
-from dynairxvis.utils import _plot_now_line, resolve_orientation
+from dynairxvis.utils import _plot_now_line, _resolve_orientation
 import matplotlib.pyplot as plt
 
 CATEGORIES = ['N1', 'N2', 'N3']
@@ -50,7 +50,7 @@ def test_plot_now_line_with_label():
 
 
 def test_resolve_orientation():
-    assert resolve_orientation('hOriZ') == 'horizontal'
-    assert resolve_orientation('verT') == 'vertical'
+    assert _resolve_orientation('hOriZ') == 'horizontal'
+    assert _resolve_orientation('verT') == 'vertical'
     with pytest.raises(ValueError):
-        resolve_orientation('BLA')
+        _resolve_orientation('BLA')

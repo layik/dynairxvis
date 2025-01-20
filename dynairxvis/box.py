@@ -28,7 +28,8 @@ def box(values, horizontal=False, fig_kw={}, plot_kw={}, **kwargs):
     plt.figure(**fig_kw)
 
     # Configure median properties if not provided
-    medianprops = plot_kw.pop('medianprops', {'color': 'black', 'linewidth': 2})
+    medianprops = plot_kw.pop('medianprops',
+                              {'color': 'black', 'linewidth': 2})
 
     # Plot the box plot
     if horizontal:
