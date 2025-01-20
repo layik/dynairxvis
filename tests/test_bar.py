@@ -25,7 +25,9 @@ def test_bar(mock_show):
     # Test fig_kw
     bar(CATEGORIES, VALUES, fig_kw={"figsize": (10, 6)})
     fig = plt.gcf()
-    assert np.allclose(fig.get_size_inches(), (10, 6)), "fig_kw not applied correctly"
+    assert np.allclose(fig.get_size_inches(), (10, 6)), (
+        "fig_kw not applied correctly"
+    )
     plt.close(fig)
 
     # Test plot_kw
@@ -33,7 +35,9 @@ def test_bar(mock_show):
     ax = plt.gca()
     for container in ax.containers:
         for bar_patch in container:
-            assert bar_patch.get_facecolor() == (1.0, 0.0, 0.0, 0.5), "plot_kw not applied correctly"
+            assert bar_patch.get_facecolor() == (1.0, 0.0, 0.0, 0.5), (
+                "plot_kw not applied correctly"
+            )
     plt.close(fig)
 
     # Test additional kwargs
@@ -41,6 +45,8 @@ def test_bar(mock_show):
         ylabel="Values")
     ax = plt.gca()
     assert ax.get_title() == "Test Title", "Title not applied correctly"
-    assert ax.get_xlabel() == "Categories", "X-axis label not applied correctly"
+    assert ax.get_xlabel() == "Categories", (
+        "X-axis label not applied correctly"
+    )
     assert ax.get_ylabel() == "Values", "Y-axis label not applied correctly"
     plt.close(fig)
