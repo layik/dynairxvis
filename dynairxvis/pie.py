@@ -117,14 +117,17 @@ def _pie(categories, values, fig_kw, **kwargs):
 
     if values is None:
         # Plot a single pie chart with equal segments
-        fig, ax = plt.subplots(**fig_kw)
-        colors = plt.cm.Greys(np.linspace(0.2, 0.8, total))
+        default_fig_kw = {'figsize': (6, 6)}
+        default_fig_kw.update(fig_kw)
+        fig, ax = plt.subplots(**default_fig_kw)
+        colors = kwargs.get('colors', plt.cm.Greys(np.linspace(0.2, 0.8, total)))
         ax.pie(values_1pie, labels=categories if total < 10 else None,
-               colors=colors, startangle=90, autopct='%1.1f%%',
-               wedgeprops=dict(edgecolor='black'))
+               colors=colors, startangle=kwargs.get('startangle', 90),
+               autopct=kwargs.get('autopct', '%1.1f%%'),
+               wedgeprops=kwargs.get('wedgeprops', {'edgecolor': 'black'}))
         if total >= 10:
-            ax.legend(categories, loc="best", fontsize=8)
-        # ax.set_title('Pie Chart')
+            ax.legend(categories, loc="best",
+                      fontsize=kwargs.get('fontsize', 8))
     else:
         fig, axs = _figure_and_axes(num_pies, fig_kw)
         # Create a pie chart for each category
@@ -132,10 +135,13 @@ def _pie(categories, values, fig_kw, **kwargs):
             # Calculate pie segments
             segment = [value / total, (total - value) / total]
             # Plot pie chart
-            ax.pie(segment, labels=[f'{value}', ''], colors=gray_color_palette,
-                   startangle=90, wedgeprops=dict(edgecolor='black'),
-                   normalize=True, **kwargs)
-            ax.set_title(category)
+            ax.pie(segment, labels=[f'{value}', ''],
+                   colors=kwargs.get('colors', gray_color_palette),
+                   startangle=kwargs.get('startangle', 90),
+                   autopct=kwargs.get('autopct', None),  # Pass autopct
+                   wedgeprops=kwargs.get('wedgeprops', {'edgecolor': 'black'}),
+                   normalize=True)
+            ax.set_title(category, fontsize=kwargs.get('fontsize', 10))
 
     _show()
 
