@@ -1,6 +1,6 @@
 import pytest
 from datetime import datetime, timedelta
-from dynairxvis.utils import _plot_now_line
+from dynairxvis.utils import _plot_now_line, resolve_orientation
 import matplotlib.pyplot as plt
 
 CATEGORIES = ['N1', 'N2', 'N3']
@@ -47,3 +47,10 @@ def test_plot_now_line_with_label():
     assert ax.texts[0].get_color() == 'red'
     plt.close(fig)
     assert ax.texts[0].get_color() == 'red'
+
+
+def test_resolve_orientation():
+    assert resolve_orientation('hOriZ') == 'horizontal'
+    assert resolve_orientation('verT') == 'vertical'
+    with pytest.raises(ValueError):
+        resolve_orientation('BLA')
