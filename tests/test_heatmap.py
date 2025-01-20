@@ -1,40 +1,47 @@
-import numpy as np
-from dynairxvis.plot import heatmap
 import matplotlib.pyplot as plt
 from unittest.mock import patch
+from dynairxvis.plot import box
 
 
 @patch('matplotlib.pyplot.show')
-def test_heatmap_creates_correct_matrix(mock_show):
-    # Improved flattening function that checks type of each item
-    def flatten(values):
-        flattened_values = []
-        for item in values:
-            if isinstance(item, list):
-                flattened_values.extend(item)
-            else:
-                flattened_values.append(item)
-        return flattened_values
-    # Define the categories and values to test
-    categories = ['Cat A', 'Cat B', 'Cat C']
-    values = [10, [15, 20], 35]
+def test_box_creates_plot(mock_show):
+    values = [1, 2, 2, 3, 4, 4, 4, 5, 6, 7]
 
-    # Expected matrix size
-    expected_matrix_size = (len(categories), len(set(flatten(values))))
-
-    # Call the heatmap function to simulate the heatmap creation
-    # Since heatmap does not return a value, we'll need to capture
-    # the matrix from the plotting context
-    heatmap(categories, values, colorbar=False)
-    # Access the current figure and its axes to get the matrix data
+    # Test the vertical box plot
+    box(values, title="Vertical Box Plot", ylabel="Values", xticks_labels=["Test Set"])
     fig = plt.gcf()
-    ax = plt.gca()
-    cax = ax.get_children()[0]  # Get the AxesImage object, the heatmap
-    heatmap_matrix = cax.get_array().data  # Extract the data of the heatmap
+    ax = fig.axes[0]
+    assert len(ax.lines) > 0, (
+        "No lines found in the plot (vertical)"
+    )
+    assert ax.get_ylabel() == "Values", (
+        "Y-axis label not applied correctly"
+    )
+    assert ax.get_xticklabels()[0].get_text() == "Test Set", (
+        "X-tick label not applied correctly"
+    )
+    assert ax.get_title() == "Vertical Box Plot", (
+        "Title not applied correctly"
+    )
 
-    # Check if the created heatmap matrix has the correct size
-    assert heatmap_matrix.shape == expected_matrix_size, (
-        f"Expected matrix size {expected_matrix_size}, got {heatmap_matrix.shape}")
+    plt.close(fig)  # Close the figure before the next test
 
-    # Cleanup after test
+    # Test the horizontal box plot
+    box(values, horizontal=True, title="Horizontal Box Plot",
+        xlabel="Values", yticks_labels=["Test Set"])
+    fig = plt.gcf()
+    ax = fig.axes[0]
+    assert len(ax.lines) > 0, (
+        "No lines found in the plot (horizontal)"
+    )
+    assert ax.get_xlabel() == "Values", (
+        "X-axis label not applied correctly"
+    )
+    assert ax.get_yticklabels()[0].get_text() == "Test Set", (
+        "Y-tick label not applied correctly"
+    )
+    assert ax.get_title() == "Horizontal Box Plot", (
+        "Title not applied correctly"
+    )
+
     plt.close(fig)

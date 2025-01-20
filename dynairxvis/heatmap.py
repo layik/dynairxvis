@@ -110,7 +110,10 @@ def heatmap(categories, values=None, start_dates=None, end_dates=None,
 
     # Colorbar settings if needed
     if kwargs.get('colorbar', False):
-        fig.colorbar(cax, ax=ax, orientation='vertical')
+        if ax is None:
+            fig.colorbar(cax, ax=ax, **kwargs.get('colorbar_kw', {}))
+        else:
+            ax.figure.colorbar(cax, ax=ax, **kwargs.get('colorbar_kw', {}))
 
     # Additional plot adjustments
     if ax is None:
