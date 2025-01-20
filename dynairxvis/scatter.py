@@ -69,24 +69,34 @@ def scatter(categories, start_dates=None, end_dates=None, values=None,
     if mode == 'scatter':
         for i, value in enumerate(values):
             ax.scatter(x_indices[i], value,
-                       **plot_kw, color=color_theme[i],
                        marker=markers.get(
-                           categories[i], 'o') if markers else 'o')
+                           categories[i],
+                           'o') if markers else 'o',
+                       color=plot_kw.get('color', color_theme)[i],
+                       **plot_kw)
     elif mode == 'bar':
         if orientation == 'horizontal':
-            ax.barh(x_indices, values, color=color_theme, **plot_kw)
+            ax.barh(x_indices, values,
+                    color=plot_kw.get('color', color_theme),
+                    # remove color from kwargs
+                    **{k: v for k, v in plot_kw.items() if k != 'color'})
         else:
-            ax.bar(x_indices, values, color=color_theme, **plot_kw)
+            ax.bar(x_indices, values,
+                   color=plot_kw.get('color', color_theme),
+                   # remove color from kwargs
+                   **{k: v for k, v in plot_kw.items() if k != 'color'})
 
     # Set category labels on x-axis or y-axis
     if orientation == 'horizontal' and mode == 'bar':
         ax.set_yticks(x_indices)
         ax.set_yticklabels(categories)
         ax.set_xlabel(kwargs.get('xlabel', 'Quantity'))
+        ax.set_ylabel(kwargs.get('ylabel', ''))
     else:
         ax.set_xticks(x_indices)
         ax.set_xticklabels(categories)
         ax.set_ylabel(kwargs.get('ylabel', 'Quantity'))
+        ax.set_xlabel(kwargs.get('xlabel', ''))
 
     ax.set_title(kwargs.get('title', f'{mode.capitalize()} Plot'))
 

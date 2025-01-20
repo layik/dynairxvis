@@ -35,6 +35,9 @@ def bar(categories, values, horizontal=False, markers=None,
 
     bar(categories, values, horizontal=True)
     """
+
     # Call the scatter function with mode set to 'bar'
+    orientation = 'horizontal' if horizontal else 'vertical'
+
     scatter(categories, values=values, mode='bar', markers=markers,
-            fig_kw=fig_kw, plot_kw=plot_kw, horizontal=horizontal, **kwargs)
+            fig_kw=fig_kw, plot_kw=plot_kw, orientation=orientation, **kwargs)
