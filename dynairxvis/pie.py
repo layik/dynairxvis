@@ -120,7 +120,8 @@ def _pie(categories, values, fig_kw, **kwargs):
         default_fig_kw = {'figsize': (6, 6)}
         default_fig_kw.update(fig_kw)
         fig, ax = plt.subplots(**default_fig_kw)
-        colors = kwargs.get('colors', plt.cm.Greys(np.linspace(0.2, 0.8, total)))
+        colors = kwargs.get('colors',
+                            plt.cm.Greys(np.linspace(0.2, 0.8, total)))
         ax.pie(values_1pie, labels=categories if total < 10 else None,
                colors=colors, startangle=kwargs.get('startangle', 90),
                autopct=kwargs.get('autopct', '%1.1f%%'),
