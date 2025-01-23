@@ -40,7 +40,10 @@ def violin(values, horizontal=False, fig_kw={}, plot_kw={}, **kwargs):
     default_plot_kw.update(plot_kw)  # Update with any user kwargs
 
     # Plot the violin plot
-    parts = plt.violinplot(values, vert=not horizontal, **default_plot_kw)
+    parts = plt.violinplot(values, 
+                          orientation='horizontal' if horizontal else 'vertical',
+                          **default_plot_kw)
+
 
     # Apply a default grayscale color map if no color is provided in plot_kw
     colors = plot_kw.get('colors', None)
@@ -51,13 +54,42 @@ def violin(values, horizontal=False, fig_kw={}, plot_kw={}, **kwargs):
         part.set_facecolor(color)
         part.set_edgecolor(edgecolor)
 
-    # Set the color of the 'cbars', 'cmins', and 'cmaxes' parts to black
-    for partname in ('cbars', 'cmins', 'cmaxes', 'cmedians'):
+    # Set the color of the 'cbars', 'cmins', 'cmaxes', and 'cmedians' parts
+    cbar_color = plot_kw.get('cbars_color', 'black')
+    cmedian_color = plot_kw.get('cmedians_color', 'red')
+    for partname, color in zip(['cbars', 'cmins', 'cmaxes', 'cmedians'],
+                               [cbar_color, cbar_color, cbar_color, cmedian_color]):
         vp = parts[partname]
-        vp.set_edgecolor(edgecolor)
+        vp.set_edgecolor(color)
 
+    # Dynamic axis labels
+    if horizontal:
+        plt.xlabel(kwargs.get('xlabel', 'Values'))
+        plt.ylabel(kwargs.get('ylabel', ''))
+    else:
+        plt.ylabel(kwargs.get('ylabel', 'Values'))
+        plt.xlabel(kwargs.get('xlabel', ''))
+
+    # Title setup
     plt.title(kwargs.get('title', 'Violin Plot of Values'))
-    plt.ylabel(kwargs.get('ylabel', 'Values'))
-    plt.xticks([1], kwargs.get('xticks_labels', ['Value Set']))
-    plt.grid(True, which='both', axis='y', linestyle='--', linewidth=0.5)
+
+    # Apply xticks
+    plt.xticks(kwargs.get('xticks', [1]),
+               kwargs.get('xticks_labels', ['Value Set']))
+
+    # Enable grid
+    plt.grid(kwargs.get('grid', True), which='both', axis='y' if not horizontal else 'x',
+             linestyle=kwargs.get('grid_linestyle', '--'),
+             linewidth=kwargs.get('grid_linewidth', 0.5))
+
+    # Apply legend if specified
+    if kwargs.get('legend', False):
+        plt.legend(kwargs.get('legend_labels', ['Violin Plot']),
+                   loc=kwargs.get('legend_loc', 'best'))
+
+    # Adjust layout
+    if kwargs.get('tight_layout', True):
+        plt.tight_layout()
+
+    # Show plot
     plt.show()
