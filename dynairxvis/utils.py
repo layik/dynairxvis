@@ -154,3 +154,38 @@ def _plot_now_line(ax, max_date=None, label='Now'):
                     xytext=(10, 0), textcoords='offset points', color='red')
     if not isinstance(ax, plt.Axes):
         raise TypeError("ax must be a matplotlib.axes.Axes instance")
+
+
+def _resolve_orientation(orientation):
+    """
+    Resolves orientation strings flexibly based on substrings.
+
+    Parameters
+    ----------
+    orientation : str
+        The orientation string to resolve. Valid inputs include:
+        - Any substring containing 'vert' resolves to 'vertical'.
+        - Any substring containing 'hori' resolves to 'horizontal'.
+
+    Returns
+    -------
+    str
+        The resolved full-length orientation string
+        ('vertical' or 'horizontal').
+
+    Raises
+    ------
+    ValueError
+        If the input string cannot be resolved to a valid orientation.
+    """
+    orientation_lower = orientation.lower()
+    if "vert" in orientation_lower:
+        return "vertical"
+    elif "hori" in orientation_lower:
+        return "horizontal"
+    else:
+        raise ValueError(
+            f"Invalid orientation: '{orientation}'. "
+            "Expected 'vertical' or 'horizontal' "
+            "(or substrings like 'vert', 'hori')."
+        )

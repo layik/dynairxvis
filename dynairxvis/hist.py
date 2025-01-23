@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from .utils import FIG_SIZE
+from .utils import FIG_SIZE, _resolve_orientation
 
 
 def histogram(values, bins=None, orientation='vertical',
@@ -29,28 +29,27 @@ def histogram(values, bins=None, orientation='vertical',
     histogram(values, bins=[0, 2, 4, 6, 8, 10], orientation='horizontal',
               xlabel='Frequency', ylabel='Value')
     """
-    # Setup default figure size
-    default_fig_kw = FIG_SIZE
-    # Update with any user-provided figure kwargs,
-    # preserving the defaults unless overridden
-    default_fig_kw.update(fig_kw)
+    # resolve orientation
+    orientation = _resolve_orientation(orientation)
 
-    # Setup figure with combined default and provided figure kwargs
+    # Setup default figure size
+    default_fig_kw = FIG_SIZE.copy()  # Ensure FIG_SIZE remains unchanged
+    default_fig_kw.update(fig_kw)  # Merge user-provided fig_kw
+
+    # Setup figure
     plt.figure(**default_fig_kw)
 
     # Set default plot properties
     plot_defaults = {'edgecolor': 'black', 'color': 'gray'}
-    # Update with any user-provided plot kwargs,
-    # preserving the defaults unless overridden
-    plot_defaults.update(plot_kw)
+    plot_defaults.update(plot_kw)  # Merge user-provided plot_kw
 
     # Plot the histogram
     plt.hist(values, bins=bins, orientation=orientation, **plot_defaults)
 
     # Dynamically adjust labels based on orientation
     if orientation == 'horizontal':
-        plt.ylabel(kwargs.get('xlabel', 'Value'))
-        plt.xlabel(kwargs.get('ylabel', 'Frequency'))
+        plt.xlabel(kwargs.get('xlabel', 'Frequency'))  # xlabel gets 'ylabel'
+        plt.ylabel(kwargs.get('ylabel', 'Value'))      # ylabel gets 'xlabel'
     else:
         plt.xlabel(kwargs.get('xlabel', 'Value'))
         plt.ylabel(kwargs.get('ylabel', 'Frequency'))
@@ -58,11 +57,12 @@ def histogram(values, bins=None, orientation='vertical',
     # Title setup if provided
     plt.title(kwargs.get('title', 'Histogram of Values'))
 
-    # Adjust tick marks if specified in kwargs, considering orientation
+    # Adjust tick marks if specified in kwargs
     if 'xticks' in kwargs and 'xticklabels' in kwargs:
         if orientation == 'horizontal':
             plt.yticks(kwargs['xticks'], kwargs['xticklabels'])
         else:
             plt.xticks(kwargs['xticks'], kwargs['xticklabels'])
 
+    # Show the figure
     plt.show()

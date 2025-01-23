@@ -105,14 +105,14 @@ def grouped_chart(categories, start_dates, end_dates, chart_type='line',
             position = category_positions[cat]
             color = category_colors[cat]
             marker = category_markers[cat]
+            if 'color' not in plot_kw:  # Prevent conflict
+                plot_kw['color'] = color
             if chart_type == 'scatter':
-                ax.scatter([start, end], [position, position], color=color,
-                           marker=marker, **plot_kw,
-                           label=cat if cat not in plotted_cats else "")
+                ax.scatter([start, end], [position, position], marker=marker,
+                        **plot_kw, label=cat if cat not in plotted_cats else "")
             elif chart_type == 'line':
-                ax.plot([start, end], [position, position], color=color,
-                        marker=marker, **plot_kw,
-                        label=cat if cat not in plotted_cats else "")
+                ax.plot([start, end], [position, position], marker=marker,
+                        **plot_kw, label=cat if cat not in plotted_cats else "")
             plotted_cats.add(cat)
 
     def _plot_heatmap():
@@ -158,6 +158,7 @@ def grouped_chart(categories, start_dates, end_dates, chart_type='line',
     ax.xaxis_date()
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y'))
     ax.set_xlabel(kwargs.get('xlabel', 'Date'))
+    ax.set_ylabel(kwargs.get('ylabel', 'Categories'))
     ax.set_title(kwargs.get('title', f'{chart_type.capitalize()} Chart'))
 
     if values is not None:

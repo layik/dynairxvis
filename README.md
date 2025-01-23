@@ -1,6 +1,6 @@
 # DynAIRxVIS
 
-Python package for DynAIRx visualization.
+Python package for DynAIRx visualization. The package uses `matplotlib` to generate static charts.
 
 The package is designed to visualise the results of the DynAIRx first design study into charts to support Structured Medication Review (SMR) in primary care. The first evaluation confirmed the effectiveness of 11 out 14 charts. These were the charts used for each of the six categories of data combinations:
 - Nominal (N)
@@ -10,16 +10,19 @@ The package is designed to visualise the results of the DynAIRx first design stu
 - Nominal, Quantitative, Temporal (NQT)
 - Nominal, Temporal, Ordinal (NTO)
 
+See the table below for how these data types are used within the design study.
+
 ## Installation
 
 ```bash
-# once published on pypi
+# once published on pypi (WIP)
 pip install dynairxvis
 # development version
 # pip install git+githubURL
 ```
 # Use
-Hypothetical dataframe (notice blood_pressure is there just for WIP work)
+The package can be used for "quality" charts for any of the above data type combinations. Hypothetical dataframe (notice blood_pressure is there just for WIP work) and your data could be for anything with same data types.
+
 ```py
 import pandas as pd
 df = pd.DataFrame({
@@ -61,5 +64,16 @@ To run the tests, run the following command:
 ```bash
 python -m pytest
 ```
+
+## The datatypes in SMRs
+
+| **Categories**                             | **Combinations of data types**  | **Final chart options**                                                                 |
+|--------------------------------------------|----------------------------------|----------------------------------------------------------------------------------------|
+| Conditions, Medications, Investigations    | N (Name)                        | Donut, Pie, and List (Table)                                                           |
+| Conditions, Medications                    | N, T (Name, Date)               | Gantt, Pie, Line, Donut, Scatter, Heatmap                                              |
+| Conditions                                 | N, T, O (Name, Date, Severity)  | Gantt, Heatmap, Line, Scatter                                                          |
+| Investigations                             | Q (Quantity)                    | Box, Dot (Wilkinson), Histogram, Violin                                                |
+| Investigations                             | N, Q (Name, Quantity)           | Bar, Scatter, Heatmap, Table, Pie, Donut, Radar                                        |
+| Investigations                             | N, Q, T (Name, Quantity, Date)  | Gantt, Heatmap, Line, Scatter                                                          |
 
 ## Acknowledgements

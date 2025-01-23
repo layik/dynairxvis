@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-
+from .utils import FIG_SIZE
 
 def box(values, horizontal=False, fig_kw={}, plot_kw={}, **kwargs):
     """
@@ -24,27 +24,31 @@ def box(values, horizontal=False, fig_kw={}, plot_kw={}, **kwargs):
 
     box(values)
     """
-    # Default figure setup
-    plt.figure(**fig_kw)
+    # Setup default figure size
+    default_fig_kw = FIG_SIZE.copy()
+    default_fig_kw.update(fig_kw)
+
+    # Create the figure
+    plt.figure(**default_fig_kw)
 
     # Configure median properties if not provided
-    medianprops = plot_kw.pop('medianprops',
-                              {'color': 'black', 'linewidth': 2})
+    medianprops = plot_kw.pop('medianprops', {'color': 'black', 'linewidth': 2})
 
     # Plot the box plot
+    plt.boxplot(values, vert=not horizontal, medianprops=medianprops, **plot_kw)
+
+    # Set axis labels and grid
     if horizontal:
-        plt.boxplot(values, vert=False, medianprops=medianprops,
-                    **plot_kw, **kwargs)
-        plt.xlabel(kwargs.get('ylabel', 'Values'))
-        plt.yticks([1], kwargs.get('xticks_labels', ['Value Set']))
+        plt.xlabel(kwargs.get('xlabel', 'Values'))  # Set xlabel
+        plt.yticks([1], kwargs.get('yticks_labels', ['Value Set']))
         plt.grid(True, which='both', axis='x', linestyle='--', linewidth=0.5)
     else:
-        plt.boxplot(values, vert=True, medianprops=medianprops,
-                    **plot_kw, **kwargs)
-        plt.ylabel(kwargs.get('ylabel', 'Values'))
+        plt.ylabel(kwargs.get('ylabel', 'Values'))  # Set ylabel
         plt.xticks([1], kwargs.get('xticks_labels', ['Value Set']))
         plt.grid(True, which='both', axis='y', linestyle='--', linewidth=0.5)
 
+    # Apply title
     plt.title(kwargs.get('title', 'Box Plot of Values'))
 
+    # Show the plot
     plt.show()
