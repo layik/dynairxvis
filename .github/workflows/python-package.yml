@@ -6,6 +6,8 @@ on:
       - '**/README.md'
       - '.readthedocs.yml'
   pull_request:
+      - '**/README.md'
+      - '.readthedocs.yml'
     branches: [ main ]
 
 jobs:
