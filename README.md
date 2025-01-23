@@ -69,11 +69,15 @@ python -m pytest
 
 | **Categories**                             | **Combinations of data types**  | **Final chart options**                                                                 |
 |--------------------------------------------|----------------------------------|----------------------------------------------------------------------------------------|
-| Conditions, Medications, Investigations    | N (Name)                        | Donut, Pie, and List (Table)                                                           |
-| Conditions, Medications                    | N, T (Name, Date)               | Gantt, Pie, Line, Donut, Scatter, Heatmap                                              |
+| Conditions, Medications, Investigations    | N (Name)                        | List (Table) and Pie                                                           |
+| Conditions, Medications                    | N, T (Name, Date)               | Gantt, Pie, Line, Scatter, Heatmap                                              |
 | Conditions                                 | N, T, O (Name, Date, Severity)  | Gantt, Heatmap, Line, Scatter                                                          |
-| Investigations                             | Q (Quantity)                    | Box, Dot (Wilkinson), Histogram, Violin                                                |
-| Investigations                             | N, Q (Name, Quantity)           | Bar, Scatter, Heatmap, Table, Pie, Donut, Radar                                        |
+| Investigations                             | Q (Quantity)                    | Box, Histogram, Violin                                                |
+| Investigations                             | N, Q (Name, Quantity)           | Bar, Scatter, Heatmap, Table, Pie                                        |
 | Investigations                             | N, Q, T (Name, Quantity, Date)  | Gantt, Heatmap, Line, Scatter                                                          |
 
 ## Acknowledgements
+> DynAIRx (Artificial Intelligence for dynamic prescribing optimisation and care integration in multimorbidity) aims to develop new, easy to use, artificial intelligence (AI) tools that support General Practitioners (GPs) and pharmacists to find patients living with multimorbidity (two or more long-term health conditions) who might be offered a better combination of medicines.
+
+From the project website: 
+https://www.liverpool.ac.uk/dynairx/
