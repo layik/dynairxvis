@@ -37,8 +37,8 @@ jobs:
 
     - name: Run tests
       run: |
-        poetry install pytest-cov
-        poetry run pytest --cov-branch --cov-report=xml --cov=. -vv
+        pip install pytest-cov
+        pytest --cov-branch --cov-report=xml --cov=. -vv
 
     - name: Run notebooks [Ubuntu]
       if: runner.os == 'Linux'
