@@ -35,12 +35,7 @@ def box(values, horizontal=False, fig_kw={}, plot_kw={}, **kwargs):
     medianprops = plot_kw.pop('medianprops', {'color': 'black', 'linewidth': 2})
 
     # Plot the box plot
-    plt.boxplot(
-        values,
-        orientation='horizontal' if horizontal else 'vertical',
-        medianprops=medianprops,
-        **plot_kw
-    )
+    plt.boxplot(values, vert=horizontal, medianprops=medianprops, **plot_kw)
 
     # Set axis labels and grid
     if horizontal:

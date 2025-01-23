@@ -40,9 +40,7 @@ def violin(values, horizontal=False, fig_kw={}, plot_kw={}, **kwargs):
     default_plot_kw.update(plot_kw)  # Update with any user kwargs
 
     # Plot the violin plot
-    parts = plt.violinplot(values, 
-                          orientation='horizontal' if horizontal else 'vertical',
-                          **default_plot_kw)
+    parts = plt.violinplot(values, vert=horizontal, **default_plot_kw)
 
 
     # Apply a default grayscale color map if no color is provided in plot_kw
