@@ -1,6 +1,6 @@
 # DynAIRxVIS
 
-[![codecov](https://codecov.io/gh/layik/dynairxvis/graph/badge.svg?token=23HPR7W5OS)](https://codecov.io/gh/layik/dynairxvis)
+[![codecov](https://codecov.io/gh/layik/dynairxvis/graph/badge.svg?token=23HPR7W5OS)](https://codecov.io/gh/layik/dynairxvis) [![Python Package](https://github.com/layik/dynairxvis/actions/workflows/python-package.yml/badge.svg)](https://github.com/layik/dynairxvis/actions/workflows/python-package.yml)
 
 Python package for DynAIRx visualization. The package uses `matplotlib` to generate static charts.
 
