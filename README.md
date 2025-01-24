@@ -1,5 +1,7 @@
 # DynAIRxVIS
 
+[![codecov](https://codecov.io/gh/layik/dynairxvis/graph/badge.svg?token=23HPR7W5OS)](https://codecov.io/gh/layik/dynairxvis)
+
 Python package for DynAIRx visualization. The package uses `matplotlib` to generate static charts.
 
 The package is designed to visualise the results of the DynAIRx first design study into charts to support Structured Medication Review (SMR) in primary care. The first evaluation confirmed the effectiveness of 11 out 14 charts. These were the charts used for each of the six categories of data combinations:
