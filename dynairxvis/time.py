@@ -109,10 +109,12 @@ def grouped_chart(categories, start_dates, end_dates, chart_type='line',
                 plot_kw['color'] = color
             if chart_type == 'scatter':
                 ax.scatter([start, end], [position, position], marker=marker,
-                        **plot_kw, label=cat if cat not in plotted_cats else "")
+                           **plot_kw, 
+                           label=cat if cat not in plotted_cats else "")
             elif chart_type == 'line':
                 ax.plot([start, end], [position, position], marker=marker,
-                        **plot_kw, label=cat if cat not in plotted_cats else "")
+                        **plot_kw, 
+                        label=cat if cat not in plotted_cats else "")
             plotted_cats.add(cat)
 
     def _plot_heatmap():

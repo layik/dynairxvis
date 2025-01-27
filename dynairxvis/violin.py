@@ -42,7 +42,6 @@ def violin(values, horizontal=False, fig_kw={}, plot_kw={}, **kwargs):
     # Plot the violin plot
     parts = plt.violinplot(values, vert=not horizontal, **default_plot_kw)
 
-
     # Apply a default grayscale color map if no color is provided in plot_kw
     colors = plot_kw.get('colors', None)
     if colors is None:
@@ -56,7 +55,8 @@ def violin(values, horizontal=False, fig_kw={}, plot_kw={}, **kwargs):
     cbar_color = plot_kw.get('cbars_color', 'black')
     cmedian_color = plot_kw.get('cmedians_color', 'red')
     for partname, color in zip(['cbars', 'cmins', 'cmaxes', 'cmedians'],
-                               [cbar_color, cbar_color, cbar_color, cmedian_color]):
+                               [cbar_color, cbar_color, cbar_color, 
+                                cmedian_color]):
         vp = parts[partname]
         vp.set_edgecolor(color)
 
@@ -76,7 +76,8 @@ def violin(values, horizontal=False, fig_kw={}, plot_kw={}, **kwargs):
                kwargs.get('xticks_labels', ['Value Set']))
 
     # Enable grid
-    plt.grid(kwargs.get('grid', True), which='both', axis='y' if not horizontal else 'x',
+    plt.grid(kwargs.get('grid', True), which='both',
+             axis='y' if not horizontal else 'x',
              linestyle=kwargs.get('grid_linestyle', '--'),
              linewidth=kwargs.get('grid_linewidth', 0.5))
 
