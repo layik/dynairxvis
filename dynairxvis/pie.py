@@ -67,17 +67,25 @@ def _figure_and_axes(num_plots, fig_kw, **kwargs):
     tuple: The figure and axes objects.
     """
     # Set default figure properties
-    default_fig_kw = {'figsize': (num_plots * 3, 3) if num_plots else (3, 3)}
+    default_fig_kw = {'figsize': (min(num_plots, 3) * 3, 
+                                  (num_plots // 3 + 1) * 3)}
     default_fig_kw.update(fig_kw)
 
+    # Define grid size (max 3 columns)
+    cols = min(num_plots, 3) 
+    rows = (num_plots // cols) + (num_plots % cols > 0)
+
     # Create figure and axes
-    fig, axs = plt.subplots(1, max(num_plots, 1), **default_fig_kw, **kwargs)
+    fig, axs = plt.subplots(rows, cols, **default_fig_kw, **kwargs)
 
-    # Ensure axs is iterable, especially when there's only one plot
-    if num_plots == 1:
-        axs = [axs]  # Make it iterable if there's only one subplot
+    # Ensure axs is a flat list
+    axs = axs.flatten() if isinstance(axs, (list, np.ndarray)) else [axs]
 
-    return fig, axs
+    # Hide empty subplots if num_plots is not filling all grid positions
+    for ax in axs[num_plots:]:
+        ax.set_visible(False)
+
+    return fig, axs[:num_plots]
 
 
 def _pie(categories, values, fig_kw, **kwargs):
