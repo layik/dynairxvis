@@ -13,6 +13,7 @@ from .violin import violin
 from .hist import histogram
 from .scatter import scatter
 from .heatmap import heatmap
+from .calendar import calendar
 from .utils import profile, findIndex
 
 # For threshold of:  50.0 . These will be kept (10)
