@@ -10,15 +10,24 @@ def calendar(df=None, y_column=None, x_column=None, dot_size=0.2,
     assert (y_column is not None), "Y column must be provided."
     assert (x_column is not None), "X column must be provided."
 
-    # Set up default figure settings
-    default_fig_kw = FIG_SIZE
-    default_fig_kw.update(fig_kw)
-    chart_height = default_fig_kw['figsize'][1]
-    chart_width = default_fig_kw['figsize'][0]
+    # Merge the default figure settings with any user overrides.
+    # FIG_SIZE might contain keys meant for the axis; we'll extract those.
+    fig_defaults = FIG_SIZE.copy()
+    fig_defaults.update(fig_kw)
 
-    # Use existing ax or create new figure and axis
+    # Extract axis settings (keys that shouldn't be passed to plt.subplots)
+    axis_params = {}
+    for key in ['xlabel', 'ylabel', 'title']:
+        if key in fig_defaults:
+            axis_params[key] = fig_defaults.pop(key)
+
+    # Get chart dimensions from figure settings
+    chart_width = fig_defaults['figsize'][0]
+    chart_height = fig_defaults['figsize'][1]
+
+    # Use the provided ax or create a new one and track if we created it.
     if ax is None:
-        fig, ax = plt.subplots(**default_fig_kw)
+        fig, ax = plt.subplots(**fig_defaults)
 
     # TODO: enforce x column to be date
     df['year'] = df[x_column].dt.year
@@ -35,12 +44,12 @@ def calendar(df=None, y_column=None, x_column=None, dot_size=0.2,
     row_height = max(chart_height / len(diseases), min_row_height)
     col_width = max(chart_width / len(years), min_col_width)
 
-    # possible dot sizes
+    # Calculate dot size based on available space and total dots
     te = len(df)
     possible_dot_size = np.sqrt((col_width * row_height) / te * 2)
     dot_size = min(dot_size, possible_dot_size)
 
-    # Loop through diseases and years to draw cells and dots
+    # Draw cells and dots for each disease and year
     for i, disease in enumerate(diseases):
         for j, year in enumerate(years):
             count = g.at[disease, year]
@@ -79,13 +88,14 @@ def calendar(df=None, y_column=None, x_column=None, dot_size=0.2,
     ax.set_xticklabels(years, rotation=45)
     ax.set_yticks([row_height * (i + 0.5) for i in range(len(diseases))])
     ax.set_yticklabels(diseases)
-    ax.set_xlabel(fig_kw.get('xlabel', 'Year'))
-    ax.set_ylabel(fig_kw.get('ylabel', 'Disease'))
-    ax.set_title(fig_kw.get('title', 'Calendar Heatmap'))
-
     # plt.rcParams.update({'font.size': 12})
 
-    # If no ax provided, show the plot
+    # Set axis labels and title using the extracted axis parameters
+    ax.set_xlabel(axis_params.get('xlabel', 'Year'))
+    ax.set_ylabel(axis_params.get('ylabel', 'Disease'))
+    ax.set_title(axis_params.get('title', 'Calendar Heatmap'))
+
+    # If no ax adjust layout and display it.
     if ax is None:
         plt.tight_layout()
         plt.show()
