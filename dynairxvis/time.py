@@ -143,7 +143,8 @@ def grouped_chart(categories, start_dates, end_dates, chart_type='line',
         ax.imshow(heatmap_data, aspect='auto', cmap='Greys',
                   extent=[mdates.num2date(time_bins[0]),
                           mdates.num2date(time_bins[-1]), 0,
-                          len(unique_cats)], origin='lower')
+                          len(unique_cats)], origin='lower',
+                  interpolation='nearest')
         # fig.colorbar(cax, ax=ax)
         ax.set_yticks(np.arange(len(unique_cats)))
         ax.set_yticklabels(unique_cats)
