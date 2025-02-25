@@ -1,7 +1,6 @@
 import pytest
 import pandas as pd
 import matplotlib.pyplot as plt
-from datetime import datetime
 # Adjust the import to match your module's structure
 from dynairxvis.plot import calendar
 
@@ -93,6 +92,7 @@ def test_background_rectangles_count():
     # In the code, one background rectangle (white with black edge)
     # is drawn per cell.
     # We extract background patches by filtering for color 'white'.
-    bg_patches = [p for p in ax.patches if p.get_facecolor()[:3] == (1.0, 1.0, 1.0)]
+    bg_patches = [p for p in ax.patches if p.get_facecolor()[:3] == (
+        1.0, 1.0, 1.0)]
     assert len(bg_patches) == expected_cells, f"Expected {expected_cells} \
         background cells but found {len(bg_patches)}."
