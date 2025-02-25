@@ -16,6 +16,8 @@ from .heatmap import heatmap
 from .calendar import calendar
 from .utils import profile, findIndex
 
+__all__ = ['calendar']
+
 # For threshold of:  50.0 . These will be kept (10)
 # 'Line', 'Table', 'Bar', 'List (Table)', 'Histogram', 'Dot',
 # 'Gantt chart', 'Heatmap', 'Pie', 'Scatter'

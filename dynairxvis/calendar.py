@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from .time import grouped_chart
-from .utils import FIG_SIZE, _resolve_orientation
+from .utils import FIG_SIZE
 
 
 def calendar(df=None, y_column=None, x_column=None, dot_size=0.2,
@@ -75,7 +74,8 @@ def calendar(df=None, y_column=None, x_column=None, dot_size=0.2,
             for d in range(total_dots):
                 x_offset = x_start + (d % dots_per_row) * dot_size + 0.1
                 y_offset = y_start + (d // dots_per_row) * dot_size + 0.1
-                if y_offset + dot_size < y_start + row_height and x_offset + dot_size < x_start + col_width:
+                if (y_offset + dot_size < y_start + row_height and
+                        x_offset + dot_size < x_start + col_width):
                     ax.add_patch(plt.Rectangle((x_offset, y_offset), dot_size,
                                                dot_size, color='grey',
                                                ec='black'))
