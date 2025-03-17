@@ -45,7 +45,7 @@ def calendar(df=None, y_column=None, x_column=None, dot_size=0.2,
 
     # Calculate dot size based on available space and total dots
     te = len(df)
-    possible_dot_size = np.sqrt((col_width * row_height) / te * 2)
+    possible_dot_size = np.sqrt((chart_width * chart_height) / te * 2)
     dot_size = min(dot_size, possible_dot_size)
 
     # Draw cells and dots for each disease and year
@@ -64,9 +64,9 @@ def calendar(df=None, y_column=None, x_column=None, dot_size=0.2,
             dots_per_col = max(int(row_height / dot_size), 1)
 
             # Adjust dot size if necessary to ensure full space is used
-            if dots_per_row * dots_per_col < count:
-                dot_size = max(col_width / dots_per_row, 
-                               row_height / dots_per_col)
+            # if dots_per_row * dots_per_col < count:
+            #     dot_size = max(col_width / dots_per_row,
+            #                    row_height / dots_per_col)
 
             # Compute the final number of dots to be placed
             total_dots = min(count, dots_per_row * dots_per_col)
