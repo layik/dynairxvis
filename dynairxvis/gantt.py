@@ -102,7 +102,7 @@ def gantt(categories, start_dates, end_dates, values=None,
 
         color = unique_colors.get(color_key, 'black')
         if start == end:
-            ax.scatter([start], [category], color=color, 
+            ax.scatter([start], [category], color=color,
                        edgecolor='black', **plot_kw)
         else:
             ax.barh(category, end - start, left=start, height=height,

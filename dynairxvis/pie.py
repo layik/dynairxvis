@@ -67,12 +67,12 @@ def _figure_and_axes(num_plots, fig_kw, **kwargs):
     tuple: The figure and axes objects.
     """
     # Set default figure properties
-    default_fig_kw = {'figsize': (min(num_plots, 3) * 3, 
+    default_fig_kw = {'figsize': (min(num_plots, 3) * 3,
                                   (num_plots // 3 + 1) * 3)}
     default_fig_kw.update(fig_kw)
 
     # Define grid size (max 3 columns)
-    cols = min(num_plots, 3) 
+    cols = min(num_plots, 3)
     rows = (num_plots // cols) + (num_plots % cols > 0)
 
     # Create figure and axes
