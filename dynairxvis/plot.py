@@ -201,7 +201,8 @@ def plot_charts(df, column_refs=[], **kwargs):
         line(df[n_col], start_dates=start, end_dates=end)
         scatter(df[n_col], start_dates=start, end_dates=end, mode='gantt')
         heatmap(df[n_col], start_dates=start, end_dates=end, mode='gantt')
-        calendar(df[n_col], start_dates=start, end_dates=end)
+        # calendar(df, y_column=n_col, x_column='start')
+        calendar(df, y_column=n_col, x_column=col_names[findIndex(a, 'start')])
     elif len(col_names) == 4 and col_codes == 'NOTT':
         print('NTO charts...')
         _nott_nqtt(df[n_col], start, end, df[o_col])
