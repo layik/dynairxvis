@@ -54,7 +54,7 @@ def dot(values, fig_kw={}, ax_kw={}, plot_kw={}, **kwargs):
         'ylim': (-1, max(counts)),
         'spines.top': False, 'spines.right': False, 'spines.left': False,
         'yaxis.visible': False,
-        'xaxis.tick_params': {'axis': 'x', 'length': 0, 'pad': 8, 
+        'xaxis.tick_params': {'axis': 'x', 'length': 0, 'pad': 8,
                               'labelsize': 12}
     }
     ax_defaults.update(ax_kw)  # Update with any user-provided axes kwargs

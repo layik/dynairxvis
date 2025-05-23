@@ -55,7 +55,7 @@ def violin(values, horizontal=False, fig_kw={}, plot_kw={}, **kwargs):
     cbar_color = plot_kw.get('cbars_color', 'black')
     cmedian_color = plot_kw.get('cmedians_color', 'red')
     for partname, color in zip(['cbars', 'cmins', 'cmaxes', 'cmedians'],
-                               [cbar_color, cbar_color, cbar_color, 
+                               [cbar_color, cbar_color, cbar_color,
                                 cmedian_color]):
         vp = parts[partname]
         vp.set_edgecolor(color)

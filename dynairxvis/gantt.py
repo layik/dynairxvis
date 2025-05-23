@@ -92,7 +92,7 @@ def gantt(categories, start_dates, end_dates, values=None,
                 and use_values_as_height):
             height = height_scaling(values[i])
         else:
-            height = 0.4
+            height = 0.8
 
         # Determine the color based on the logic
         if values is not None and not use_values_as_height:
@@ -101,8 +101,12 @@ def gantt(categories, start_dates, end_dates, values=None,
             color_key = category
 
         color = unique_colors.get(color_key, 'black')
-        ax.barh(category, end - start, left=start, height=height, color=color,
-                edgecolor='black', **plot_kw)
+        if start == end:
+            ax.scatter([start], [category], color=color,
+                       edgecolor='black', **plot_kw)
+        else:
+            ax.barh(category, end - start, left=start, height=height,
+                    color=color, edgecolor='black', **plot_kw)
 
         # Only add unique color keys to the legend
         if values is not None and not use_values_as_height:
