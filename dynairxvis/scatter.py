@@ -75,7 +75,8 @@ def scatter(categories, start_dates=None, end_dates=None, values=None,
                            categories[i],
                            'o') if markers else 'o',
                        color=plot_kw.get('color', color_theme)[i],
-                       **plot_kw)
+                       # remove color from kwargs
+                       **{k: v for k, v in plot_kw.items() if k != 'color'})
     elif mode == 'bar':
         if orientation == 'horizontal':
             ax.barh(x_indices, values,
