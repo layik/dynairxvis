@@ -100,13 +100,24 @@ def gantt(categories, start_dates, end_dates, values=None,
         else:
             color_key = category
 
-        color = unique_colors.get(color_key, 'black')
-        if start == end:
-            ax.scatter([start], [category], color=color,
-                       edgecolor='black', **plot_kw)
+        # if colors are provided as kwargs, use them
+        colors_provided = kwargs.get('colors', None)
+        colors_labels = kwargs.get('colors_labels', None)
+        if colors_provided:
+            color = colors_provided[i]
+            color_label = (
+                colors_labels[i] if colors_labels is not None else color)
+            # add color to the legend
+            if color_label not in legend_patches:
+                print(color)
+                legend_patches[color_key] = Patch(facecolor=color,
+                                                  edgecolor='black',
+                                                  label=color_label)
         else:
-            ax.barh(category, end - start, left=start, height=height,
-                    color=color, edgecolor='black', **plot_kw)
+            color = unique_colors.get(color_key, 'black')
+
+        ax.barh(category, end - start, left=start, height=height, color=color,
+                edgecolor='black', **plot_kw)
 
         # Only add unique color keys to the legend
         if values is not None and not use_values_as_height:
@@ -148,6 +159,13 @@ def gantt(categories, start_dates, end_dates, values=None,
             plt.legend(handles=legend_handles, title='Bar Heights', loc='best')
         else:
             plt.legend(handles=list(legend_patches.values()), title='Values')
+
+    if colors_provided:
+        # Add the custom colors to the legend
+        legend_patches = dict(sorted(legend_patches.items()))
+        plt.legend(handles=legend_patches.values(),
+                   title=kwargs.get('legend_title', 'Colors'),
+                   loc=kwargs.get('loc', 'best'))
 
     # If no ax provided, show the plot
     if ax is None:
