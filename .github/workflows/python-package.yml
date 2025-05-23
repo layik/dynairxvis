@@ -34,7 +34,12 @@ jobs:
         python -m pip install --upgrade pip
         pip install poetry
         poetry install --with dev -vvv
-
+        python - <<'PY'
+        import dynairxvis, sys, platform
+        print("dynairxvis version", dynairxvis.__version__,
+              "imported on", platform.system(), sys.version.split()[0])
+        PY
+        
     - name: Run tests
       run: |
         poetry run pytest --cov=. --cov-branch --cov-report=xml -vv
