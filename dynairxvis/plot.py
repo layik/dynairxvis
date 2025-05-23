@@ -16,7 +16,6 @@ from .heatmap import heatmap
 from .calendar import calendar
 from .utils import profile, findIndex
 
-__all__ = ['calendar']
 
 # For threshold of:  50.0 . These will be kept (10)
 # 'Line', 'Table', 'Bar', 'List (Table)', 'Histogram', 'Dot',
@@ -202,6 +201,7 @@ def plot_charts(df, column_refs=[], **kwargs):
         line(df[n_col], start_dates=start, end_dates=end)
         scatter(df[n_col], start_dates=start, end_dates=end, mode='gantt')
         heatmap(df[n_col], start_dates=start, end_dates=end, mode='gantt')
+        calendar(df[n_col], start_dates=start, end_dates=end)
     elif len(col_names) == 4 and col_codes == 'NOTT':
         print('NTO charts...')
         _nott_nqtt(df[n_col], start, end, df[o_col])
