@@ -22,7 +22,7 @@ __all__ = [
 # --- lazy re-exports ---------------------------------------------------------
 
 from importlib import import_module as _imp
-import types as _t
+import typing as _t
 
 
 def __getattr__(name: str) -> _t.Any:

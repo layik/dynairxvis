@@ -36,7 +36,7 @@ jobs:
         poetry install --with dev -vvv
 
     - name: Import package
-      shell: bash
+      shell: bash # Use bash shell for Windows
       run: |
         python - <<'PY'
         import dynairxvis, platform, sys
