@@ -15,6 +15,7 @@ Welcome to dynairxvis's documentation!
    plot
    plotgrid
    get_started
+   modules
 
 Indices and tables
 ==================
