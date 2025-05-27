@@ -38,7 +38,7 @@ jobs:
     - name: Import package
       shell: bash # Use bash shell for Windows
       run: |
-        python - <<'PY'
+        poetry run python - <<'PY'
         import dynairxvis, platform, sys
         print("dynairxvis", dynairxvis.__version__, "on", platform.system())
         PY
