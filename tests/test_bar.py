@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 from unittest.mock import patch
-from dynairxvis.plot import bar
+from dynairxvis import bar
 from .test_utils import CATEGORIES, VALUES
 import numpy as np
 
