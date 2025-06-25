@@ -50,18 +50,18 @@ def profile(df, col_count=3):
     these types.
 
     Parameters:
-    ----------
+    -----------
     df : pandas.DataFrame
         The DataFrame for which to infer chart types.
     col_count : int, optional
         The number of columns to consider for the type inference. Default is 3.
 
     Returns:
-    -------
+    --------
     tuple
         - A dictionary mapping the first three (or fewer) DataFrame columns to
-        their inferred data types (encoded as 'N', 'O', 'Q', 'T' for nominal,
-        ordinal, quantitative, and temporal types respectively).
+          their inferred data types (encoded as 'N', 'O', 'Q', 'T' for nominal,
+          ordinal, quantitative, and temporal types respectively).
         - A string representing the combined codes of the inferred data types.
         - A list of suggested chart types based on the inferred data types.
 
@@ -97,10 +97,12 @@ def is_valid_array(input_array):
     Checks if the provided input is an array-like object and is not empty.
 
     Parameters:
+    -----------
     input_array : list, np.ndarray, pd.Series
         The input to check for array-like and non-empty properties.
 
     Returns:
+    --------
     bool
         True if the input is array-like and non-empty, False otherwise.
     """

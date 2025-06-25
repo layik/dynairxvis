@@ -35,6 +35,14 @@ jobs:
         pip install poetry
         poetry install --with dev -vvv
 
+    - name: Import package
+      shell: bash # Use bash shell for Windows
+      run: |
+        poetry run python - <<'PY'
+        import dynairxvis, platform, sys
+        print("dynairxvis", dynairxvis.__version__, "on", platform.system())
+        PY
+
     - name: Run tests
       run: |
         poetry run pytest --cov=. --cov-branch --cov-report=xml -vv
