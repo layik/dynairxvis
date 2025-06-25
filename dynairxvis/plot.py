@@ -12,7 +12,7 @@ from .radar import radar
 from .violin import violin
 from .hist import histogram
 from .scatter import scatter
-from .heatmap import heatmap
+from .heatmap import heatmap, heatmap_nq
 from .calendar import calendar
 from .utils import profile, findIndex
 
@@ -191,7 +191,7 @@ def plot_charts(df, column_refs=[], **kwargs):
         #       " values from {q_col}...")
         bar(df[n_col], df[q_col], **kwargs)
         scatter(df[n_col], values=df[q_col], mode='scatter')
-        heatmap(df[n_col], values=df[q_col], mode='heatmap')
+        heatmap_nq(df[n_col], values=df[q_col], mode='heatmap')
         pie(df[n_col], df[q_col])
     elif len(col_names) == 3 and col_codes == 'NTT':
         # NT
@@ -200,7 +200,7 @@ def plot_charts(df, column_refs=[], **kwargs):
         pie(df[n_col], start_dates=start, end_dates=end, time=True)
         line(df[n_col], start_dates=start, end_dates=end)
         scatter(df[n_col], start_dates=start, end_dates=end, mode='gantt')
-        heatmap(df[n_col], start_dates=start, end_dates=end, mode='gantt')
+        heatmap(df, y_col=n_col, date_col=col_names[findIndex(a, 'start')])
         # calendar(df, y_column=n_col, x_column='start')
         calendar(df, y_column=n_col, x_column=col_names[findIndex(a, 'start')])
     elif len(col_names) == 4 and col_codes == 'NOTT':
