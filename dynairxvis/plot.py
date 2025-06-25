@@ -262,8 +262,8 @@ def _nott_nqtt(categories, starts, ends, values):
     line(categories, start_dates=starts, end_dates=ends, values=values)
 
     # Plot Heatmap
-    heatmap(categories=categories, start_dates=starts, end_dates=ends,
-            values=values, mode='gantt')
+    heatmap_nq(categories=categories, start_dates=starts, end_dates=ends,
+               values=values, mode='gantt')
 
     # Plot Scatter plot
     scatter(categories, start_dates=starts, end_dates=ends, values=values,
